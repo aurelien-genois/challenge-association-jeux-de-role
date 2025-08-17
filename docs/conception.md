@@ -116,7 +116,7 @@ Hiérarchie des droits :
 - `Visiteur <-- Adhérent <-- Admin`
 
 | En tant que    | je souhaite pouvoir                            | afin de                                           |
-| -------------- | ---------------------------------------------- | ------------------------------------------------- | --- |
+| -------------- | ---------------------------------------------- | ------------------------------------------------- |
 | visiteur       | accéder à la page d'accueil                    | prévisualiser le contenu du site                  |
 | visiteur       | accéder au formulaire de connexion             | me connecter                                      |
 | visiteur       | accéder au formulaire d'inscription            | m'inscrire                                        |
@@ -131,7 +131,7 @@ Hiérarchie des droits :
 |  adhérent      |  accéder à une fiche                           | consulter les détails d'un personnage             |
 | adhérent       | créer une fiche                                | créer un personnage dans une partie de jeu        |
 | adhérent       | enregistrer une fiche en brouillon             | de la finaliser plus tard                         |
-| adhérent       | publier une fiche                              | l'afficher publiquement                           |     |
+| adhérent       | publier une fiche                              | l'afficher publiquement                           |
 | adhérent       | modifier une fiche que j'ai créée              |  mettre à jour le personnage                      |
 | adhérent       |  associer un métier à une fiche                | indiquer un métier au personnage                  |
 | adhérent       |  associer une compétence à une fiche           | indiquer une compétence au personnage             |
@@ -166,3 +166,42 @@ Hiérarchie des droits :
 | administrateur | modifier un rôle utilisateur                   |                                                   |
 
 ## Abuser Stories ?
+
+## Diagrame de cas d'utilisation
+
+<!-- diagramme des cas d'utilisation pour avoir une bonne vision des interraction entre les utilisateurs et le système. -->
+<!-- TODO lister des cas intéressants à représenter -->
+<!-- TODO faire le diagramme avec Whimsical -->
+
+## Wireframes
+
+<!-- wireframes à fournir pour avoir une bonne vision des interfaces attendues, ainsi que leurs possibilités d'interaction. -->
+<!-- TODO lister les interfaces à maquetter -->
+<!-- TODO faire quelques wireframes avec Whimsical -->
+
+## MCD
+
+<!-- TODO définir les entités et leurs attributs -->
+<!-- TODO définir les associations entres les entités -->
+<!-- TODO dessiner le MCD avec Whimsical ou Draw.io -->
+<!-- TODO décliner en MLD et MPD avec Whimsical ou Draw.io -->
+
+Entités :
+
+- Fiche de personnage (statut, nom, âge, description, bio, +objets, +métier, +compétence, +caractéristique, +partie)
+- Utilisateur (pseudo, email, mot de passe)
+- Partie de jeu (+jeu)
+- Jeu de rôle (titre)
+- Caractéristique (nom, +jeu)
+- Objet (nom)
+- Compétence (nom)
+- métier (nom)
+
+## Suites ?
+
+<!-- ajouter PNJ alliés
+  (status "joueur/non-joueur" sur les fiches,
+  pouvoir associer plusieurs fiches entres-elles (alliées),
+  pouvoir associer fiche "non-joueur" à un jeu de rôle)
+-->
+<!-- création projet git, mis en place NPM, routes express, schéma prisma, ... -->
