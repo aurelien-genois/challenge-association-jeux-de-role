@@ -169,9 +169,20 @@ Hiérarchie des droits :
 
 ## Diagrame de cas d'utilisation
 
-<!-- diagramme des cas d'utilisation pour avoir une bonne vision des interraction entre les utilisateurs et le système. -->
-<!-- TODO lister des cas intéressants à représenter -->
-<!-- TODO faire le diagramme avec Whimsical -->
+Diagramme d'utilisation :
+<br>(pour avoir une bonne vision des interraction entre les utilisateurs et le système)
+
+- global : ce que chaque rôle peut faire
+- Adhérent - Création d'une fiche personnage
+- Inscription (formulaire > activation par admin)
+
+Diagramme de séquence :
+<br>(comment les composants d'un système interagissent dans le temps)
+
+- Inscription
+- Création fiche
+
+<!-- TODO adapter le diagramme PUML pour la création d'une fiche personnage puis inscription -->
 
 ## Wireframes
 
@@ -180,11 +191,6 @@ Hiérarchie des droits :
 <!-- TODO faire quelques wireframes avec Whimsical -->
 
 ## MCD
-
-<!-- TODO définir les entités et leurs attributs -->
-<!-- TODO définir les associations entres les entités -->
-<!-- TODO dessiner le MCD avec Whimsical ou Draw.io -->
-<!-- TODO décliner en MLD et MPD avec Whimsical ou Draw.io -->
 
 Entités :
 

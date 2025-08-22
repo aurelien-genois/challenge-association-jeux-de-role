@@ -1,0 +1,35 @@
+@startuml Inscription
+left to right direction
+
+actor Visiteur
+actor Administrateur
+
+rectangle "Espace membre" {
+    usecase "Soummettre le formulaire d'inscription" as UC1
+    usecase "Remplir le formulaire d'inscription" as UC2
+
+    usecase "Activer le compte" as UC3
+    
+    usecase "Se connecter au compte une première fois" as UC4
+}
+
+rectangle "Boite mail visiteur" {
+    usecase "Recevoir le mail de confirmation" as UC5
+}
+
+rectangle "Boite mail administrateur" {
+    usecase "Recevoir la notification d'inscription" as UC6
+}
+
+Visiteur -- UC1
+Visiteur -- (Boite mail visiteur)
+Visiteur -- UC4
+
+Administrateur -- (Boite mail administrateur)
+Administrateur -- UC3
+
+UC1 .> UC2 : <<includes>>
+UC1 .> UC6 : <<extends>>
+UC3 .> UC5 : <<extends>>
+
+@enduml

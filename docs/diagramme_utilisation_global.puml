@@ -1,0 +1,54 @@
+@startuml cas d'utilisation
+left to right direction
+
+actor Visiteur
+actor Adhérent
+actor Administrateur
+
+Visiteur <|-- Adhérent
+Adhérent <|-- Administrateur
+
+rectangle "Site web" {
+    usecase "Accéder à l'accueil" as UC1
+    usecase "S'inscrire" as UC2
+
+    usecase "Accéder aux fiches personnages" as UC3
+    usecase "Modifier son profil" as UC4
+    usecase "Supprimer son compte" as UC5
+    usecase "Créer une fiche personnage" as UC6
+    usecase "Modifier/Supprimer ses fiches personnages" as UC7
+
+    usecase "Activer/désactiver un compte" as UC8
+    usecase "Modifier/Supprimer un compte" as UC9
+    usecase "Modifier/Supprimer un fiche" as UC10
+    usecase "Créer/Modifier/Supprimer un jeu de rôle" as UC11
+    usecase "Créer/Modifier/Supprimer une partie de jeu" as UC12
+    usecase "Créer/Modifier/Supprimer une caractéristique" as UC13
+    usecase "Créer/Modifier/Supprimer une compétence" as UC14
+    usecase "Créer/Modifier/Supprimer un métier" as UC15
+    usecase "Associer une partie à un jeu de rôle" as UC16
+    usecase "Associer une caractéristique à un jeu de rôle" as UC17
+
+}
+
+Visiteur --> UC1
+Visiteur --> UC2
+
+Adhérent --> UC3
+Adhérent --> UC4
+Adhérent --> UC5
+Adhérent --> UC6
+Adhérent --> UC7
+
+Administrateur --> UC8
+Administrateur --> UC9
+Administrateur --> UC10
+Administrateur --> UC11
+Administrateur --> UC12
+Administrateur --> UC13
+Administrateur --> UC14
+Administrateur --> UC15
+Administrateur --> UC16
+Administrateur --> UC17
+
+@enduml
