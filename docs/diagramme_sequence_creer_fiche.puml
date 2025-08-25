@@ -1,0 +1,30 @@
+@startuml  Créer une fiche personnage
+
+actor Adhérent
+boundary Interface
+control API
+database BDD
+
+== Affichage d'un formulaire ==
+Adhérent -> Interface : sélectionne la partie de jeu
+Adhérent -> Interface : sélectionne le bouton de création de fiche
+Interface --> Adhérent : affiche une fenêtre contenant un formulaire
+
+== Création de la fiche ==
+Adhérent --> Interface : remplit le formulaire de création {nom, âge, description, bio, métier, compétences, caractéristiques, objets}
+Adhérent --> Interface : soumet et publie le formulaire de création
+Interface -> API : POST /api/characters {name, age, physical_desc, bio, job_id, campaign_id, status=published, skills_ids[], characteristics_ids[], items_ids[]}
+
+API -> API : valide les données
+API -> BDD : INSERT INTO "character_sheet" {name, age, physical_desc, bio, job_id, campaign_id, status=published}
+API -> BDD : INSERT INTO "character_has_skill" {character_id, skill_id} (pour chaque compétence)
+API -> BDD : INSERT INTO "character_has_characteristic" {character_id, characteristic_id} (pour chaque caractéristique)
+API -> BDD : INSERT INTO "inventory" {character_id, item_id} (pour chaque objet)
+
+activate BDD
+BDD --> API : ID du personnage généré
+deactivate BDD
+API --> Interface : 201 + ID du personnage généré
+Interface --> Adhérent : redirige vers la fiche du personnage publiée
+
+@enduml

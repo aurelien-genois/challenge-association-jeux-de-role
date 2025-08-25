@@ -1,0 +1,53 @@
+@startuml  Inscription d'un adhérent
+
+actor Administrateur
+actor Visiteur
+boundary Interface
+control API
+database BDD
+
+== Affichage d'un formulaire ==
+Visiteur -> Interface : sélectionne le bouton d'inscription
+Interface --> Visiteur : affiche une fenêtre contenant un formulaire
+
+== Création initiale du compte ==
+Visiteur --> Interface : remplit le formulaire d'inscription {email, pseudo, mot de passe, confirmation mot de passe}
+Visiteur --> Interface : soumet le formulaire d'inscription
+Interface -> API : POST /api/register {email, username, password, password_confirmation}
+
+API -> API : valide les données
+API -> API : hash le mot de passe
+API -> BDD : INSERT INTO "user" {email, username, password, role='member'}
+
+activate BDD
+BDD --> API : ID d'utilisateur généré
+deactivate BDD
+API --> Administrateur : envoi un email de demande d'inscription
+API --> Interface : 201 + ID d'utilisateur généré
+Interface --> Visiteur : redirige vers la page de confirmation avec un message d'attente d'activation
+
+== Vérification de l'inscription par l'administrateur ==
+Administrateur -> Interface : consulte la liste des demandes d'inscription
+Interface -> API : GET /api/registration-requests
+API -> BDD : SELECT * FROM "user" WHERE role='member' AND is_active=FALSE
+BDD --> API : retourne liste des utilisateurs en attente
+API --> Interface : retourne liste des utilisateurs en attente
+Interface --> Administrateur : affiche la liste des utilisateurs en attente
+
+Administrateur -> Interface : sélectionne une demande d'inscription
+Interface -> API : GET /api/registration-requests/{id}
+API -> BDD : SELECT * FROM "user" WHERE id={id}
+BDD --> API : retourne les détails de l'utilisateur
+API --> Interface : retourne les détails de l'utilisateur
+Interface --> Administrateur : affiche les détails de l'utilisateur
+
+== Activation du compte par l'administrateur ==
+Administrateur -> Interface : clique sur le bouton "Activer"
+Interface -> API : POST /api/registration-requests/{id}/activate
+API -> BDD : UPDATE "user" SET is_active=TRUE WHERE id={id}
+BDD --> API : confirmation de la mise à jour
+API --> Visiteur : envoi un email de confirmation d'activation avec lien de connexion
+API --> Interface : 200 + confirmation de l'activation
+Interface --> Administrateur : affiche un message de succès
+
+@enduml

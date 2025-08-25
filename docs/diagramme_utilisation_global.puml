@@ -20,7 +20,7 @@ rectangle "Site web" {
 
     usecase "Activer/désactiver un compte" as UC8
     usecase "Modifier/Supprimer un compte" as UC9
-    usecase "Modifier/Supprimer un fiche" as UC10
+    usecase "Modifier/Supprimer une fiche" as UC10
     usecase "Créer/Modifier/Supprimer un jeu de rôle" as UC11
     usecase "Créer/Modifier/Supprimer une partie de jeu" as UC12
     usecase "Créer/Modifier/Supprimer une caractéristique" as UC13

@@ -167,22 +167,26 @@ Hiérarchie des droits :
 
 ## Abuser Stories ?
 
+| En tant que             | je souhaite pouvoir                          | afin de                    |
+| ----------------------- | -------------------------------------------- | -------------------------- |
+| utilisateur malveillant | exécuter une injection SQL sur un formulaire | de vider la base de donnée |
+
 ## Diagrame de cas d'utilisation
 
 Diagramme d'utilisation :
-<br>(pour avoir une bonne vision des interraction entre les utilisateurs et le système)
+
+(pour avoir une bonne vision des interraction entre les utilisateurs et le système)
 
 - global : ce que chaque rôle peut faire
 - Adhérent - Création d'une fiche personnage
 - Inscription (formulaire > activation par admin)
 
 Diagramme de séquence :
-<br>(comment les composants d'un système interagissent dans le temps)
+
+(comment les composants d'un système interagissent dans le temps)
 
 - Inscription
 - Création fiche
-
-<!-- TODO adapter le diagramme PUML pour la création d'une fiche personnage puis inscription -->
 
 ## Wireframes
 
@@ -195,13 +199,15 @@ Diagramme de séquence :
 Entités :
 
 - Fiche de personnage (statut, nom, âge, description, bio, +objets, +métier, +compétence, +caractéristique, +partie)
-- Utilisateur (pseudo, email, mot de passe)
+- Utilisateur (pseudo, email, mot de passe, rôle, actif ?)
 - Partie de jeu (+jeu)
 - Jeu de rôle (titre)
 - Caractéristique (nom, +jeu)
 - Objet (nom)
 - Compétence (nom)
 - métier (nom)
+
+## Dictionnaire de données
 
 ## Suites ?
 
