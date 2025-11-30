@@ -7,7 +7,17 @@
   "scripts": {
     "build": "tsc",
     "start": "node --env-file=.env dist/index.js",
-    "dev": "tsx --watch index.ts"
+    "dev": "tsx --watch index.ts",
+    "start:prod": "npm run db:migrate:deploy && node dist/index.js",
+    "start:dev": "npm run db:migrate:deploy && npm run dev",
+    "db:generate": "prisma generate --schema=./prisma/schema.prisma",
+    "db:migrate:deploy": "prisma migrate deploy --schema=./prisma/schema.prisma",
+    "db:migrate:dev": "prisma migrate dev --schema=./prisma/schema.prisma --name auto",
+    "db:migrate:reset": "prisma migrate reset --force --schema=./prisma/schema.prisma",
+    "db:studio": "prisma studio --schema=./prisma/schema.prisma",
+    "docker:db:reset": "docker exec -it ajdr-api npm run db:migrate:reset",
+    "docker:db:migrate:dev": "docker exec -it ajdr-api npm run db:migrate:dev",
+    "docker:db:generate": "docker exec -it ajdr-api npm run db:generate"
   },
   "keywords": [],
   "author": "aurelien.genois@gmail.com",
@@ -28,14 +38,15 @@
     "@types/uuid": "^10.0.0",
     "eslint": "^9.35.0",
     "globals": "^16.4.0",
-    "prisma": "^6.16.1",
+    "prisma": "^7.0.1",
     "tsx": "^4.20.5",
     "typescript": "^5.9.2",
     "typescript-eslint": "^8.44.0"
   },
   "dependencies": {
     "@faker-js/faker": "^10.0.0",
-    "@prisma/client": "^6.16.1",
+    "@prisma/adapter-pg": "^7.0.1",
+    "@prisma/client": "^7.0.1",
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
