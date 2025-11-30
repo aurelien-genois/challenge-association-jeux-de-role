@@ -95,7 +95,7 @@ Pas de traduction du site existante, donc pas pour la nouvelle fonctionnalité n
   - créer/modifier/supprimer une caractéristique
   - associer une caractéristique à un jeu de rôle
   - créer/modifier/supprimer une compétence
-  - créer/modifier/supprimer une métier
+  - créer/modifier/supprimer un métier
 
 ### fonctionnalités MVP
 
@@ -138,32 +138,41 @@ Hiérarchie des droits :
 | adhérent       |  associer une caractéristique à une fiche      | indiquer une caractéristique au personnage        |
 | adhérent       |  associer un objet à une fiche                 | ajouter un objet à l'inventaire du personnage     |
 |  adhérent      |  supprimer une fiche que j'ai créée            |  supprimer le personnage d'une partie             |
+| administrateur | voir tous les comptes                          |                                                   |
 | administrateur | activer un compte                              | limiter l'inscription aux adhérents               |
 | administrateur | désactiver un compte                           | limiter l'inscription aux adhérents               |
 | administrateur | supprimer un compte                            | supprimer entièrement un utilisateur              |
 | administrateur | modifier un compte                             | corriger une information si nécessaire            |
+| administrateur | voir tous les jeux de rôle                     |                                                   |
 | administrateur | créer un jeu de rôle                           | élargir le catalogue de jeu                       |
 | administrateur | modifier un jeu de rôle                        | mettre à jour ses informations                    |
 | administrateur | supprimer un jeu de rôle                       | le supprimer du catalogue                         |
 | administrateur | accéder aux détails d'un jeu de rôle           | consulter le nombre de parties associées          |
+| administrateur | voir toutes les parties de jeu                 |                                                   |
 | administrateur | créer une partie de jeu                        | initier une nouvelle partie dans un jeu de rôle   |
 | administrateur | modifier une partie de jeu                     |  corriger une information si nécessaire           |
 | administrateur | supprimer une partie de jeu                    | effacer entièrement une partie                    |
 | administrateur | accéder aux détails d'une partie de jeu        | consulter le nombre de personnages associés       |
 | administrateur | modifier une fiche                             | corriger/compléter un personnage si nécessaire    |
 | administrateur | supprimer une fiche                            | supprimer entièrement le personnage d'une partie  |
+| administrateur | voire toutes les caractéristiques              |                                                   |
 | administrateur | créer une caractéristique                      | ajouter une caractéristique à un jeu de rôle      |
 | administrateur | associer une caractéristique à un jeu de rôle  | ajouter une caractéristique à un jeu de rôle      |
 | administrateur | dissocier une caractéristique d'un jeu de rôle | la retirer complètement d'un jeu de rôle          |
 | administrateur | modifier une caractéristique                   |  corriger son nom                                 |
 | administrateur | supprimer une caractéristique                  | la retirer de tous les jeux de rôle               |
+| administrateur | voir toutes les compétences                    |                                                   |
 | administrateur | créer une compétence                           | ajouter une nouvelle compétence possible          |
 | administrateur | modifier une compétence                        | corriger son nom                                  |
 | administrateur | supprimer une compétence                       | la retirer complétement (de tous les personnages) |
+| administrateur | voir tous les métiers                          |                                                   |
 | administrateur | créer un métier                                | ajouter un nouveau métier possible                |
 | administrateur | modifier un métier                             | corriger son nom                                  |
 | administrateur | supprimer un métier                            | le retirer complétement (de tous les personnages) |
-| administrateur | modifier un rôle utilisateur                   |                                                   |
+| administrateur | voir tous les objets                           |                                                   |
+| administrateur | créer un objet                                 |                                                   |
+| administrateur | modifier un objet                              |                                                   |
+| administrateur | supprimer un objet                             |                                                   |
 
 ## Abuser Stories ?
 
@@ -175,7 +184,7 @@ Hiérarchie des droits :
 
 Diagramme d'utilisation :
 
-(pour avoir une bonne vision des interraction entre les utilisateurs et le système)
+(pour avoir une bonne vision des interractions entre les utilisateurs et le système)
 
 - global : ce que chaque rôle peut faire
 - Adhérent - Création d'une fiche personnage
@@ -323,6 +332,52 @@ Notes :
 | ------ | ----------- | ------ | -------- | --------- | ---------- | ----------------- | ----------------------------- |
 | `id`   | SERIAL      | ✅     | ✅       | -         | -          | 7                 | Identifiant unique de l'objet |
 | `name` | VARCHAR(50) | ✅     | ✅       | -         | -          | "Arc"             | Nom de l'objet                |
+
+## Routes (Endpoints API)
+
+(restriction : adhérent-administrateur, administrateur)
+(endpoints : caractéristiques, compétences, métiers, objets, parties de jeu, jeux)
+
+| Endpoint : caractéristiques | Méthode HTTP | Restriction(s) | Description                      |
+| --------------------------- | ------------ | -------------- | -------------------------------- |
+| /api/characteristics        | GET          | Administrateur | voir toutes les caractéristiques |
+
+... TODO
+
+| Endpoint : fiches personnage | Méthode HTTP | Restriction(s)           | Description                                                   |
+| ---------------------------- | ------------ | ------------------------ | ------------------------------------------------------------- |
+| /api/character-sheets        | GET          | Adhérent, Administrateur | voir toutes les fiches (filtre publiées si adhérent)          |
+| /api/character-sheets/:id    | GET          | Adhérent, Administrateur | voir une fiche (filtre publiée si adhérent)                   |
+| /api/character-sheets        | POST         | Adhérent, Administrateur | créer une fiche                                               |
+| /api/character-sheets/:id    | PATCH        | Adhérent, Administrateur | modifier une fiche (filtre que j'ai créé (self) si adhérent)  |
+| /api/character-sheets/:id    | DELETE       | Adhérent, Administrateur | supprimer une fiche (filtre que j'ai créé (self) si adhérent) |
+
+GET /api/character-sheets # utilisateur standard → fiches publiques
+GET /api/character-sheets?status=all # admin → toutes les fiches
+GET /api/character-sheets?status=draft # admin → uniquement les brouillons
+
+| Endpoint : authentification | Méthode HTTP | Restriction(s)           | Description                                           |
+| --------------------------- | ------------ | ------------------------ | ----------------------------------------------------- |
+| /api/auth/login             | POST         | -                        | me connecter (crée access & refresh tokens)           |
+| /api/auth/register          | POST         | -                        | m'inscrire (envoie 2 emails)                          |
+| /api/auth/forgot-password   | POST         | -                        | réinitialiser mon mot de passe (token + envoie email) |
+| /api/auth/reset-password    | POST         | -                        | définir un nouveau mot de passe (via token)           |
+| /api/auth/logout            | GET          | Adhérent, Administrateur | me déconnecter (supprime acess & refresh tokens)      |
+| /api/auth/refresh           | GET          | Adhérent, Administrateur | renouveller le token d'accès (via refresh token)      |
+
+| Endpoint : utilisateurs         | Méthode HTTP | Restriction(s)           | Description                              |
+| ------------------------------- | ------------ | ------------------------ | ---------------------------------------- |
+| /api/users/me                   | GET          | Adhérent, Administrateur | voir aux détails de mon compte           |
+| /api/users                      | PATCH        | Adhérent, Administrateur | modifier mes informations personnelles   |
+| /api/users/change-password      | PATCH        | Adhérent, Administrateur | modifier mon mot de passe (envoie email) |
+| /api/users                      | DELETE       | Adhérent, Administrateur | supprimer mon compte                     |
+| /api/users/:id/character-sheets | GET          | Adhérent, Administrateur | récupérer mes fiches de personnages      |
+| /api/users                      | GET          | Administrateur           | voir tous les comptes                    |
+| /api/users/:id                  | GET          | Administrateur           | voir les détails d'un compte             |
+| /api/users/:id                  | PATCH        | Administrateur           | modifie un compte                        |
+| /api/users/:id/activate         | POST         | Administrateur           | activer un compte (envoie email)         |
+| /api/users/:id/deactivate       | POST         | Administrateur           | désactiver un compte (envoie email)      |
+| /api/users/:id/delete           | DELETE       | Administrateur           | supprimer un compte (envoie email)       |
 
 ## Suites ?
 
