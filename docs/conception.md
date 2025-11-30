@@ -251,19 +251,19 @@ Notes :
 
 ### Table `character_sheet`
 
-| Champ           | Type         | Unique | Not null | Référence         | Par défaut | Exemple de valeur           | Explication                          |
-| --------------- | ------------ | ------ | -------- | ----------------- | ---------- | --------------------------- | ------------------------------------ |
-| `id`            | SERIAL       | ✅     | ✅       | -                 | -          | 1                           | Identifiant unique de le personnage  |
-| `status`        | ENUM         | ❌     | ✅       | -                 | "draft"    | "published"                 | Statut ("published" ou "draft")      |
-| `name`          | VARCHAR(50)  | ❌     | ✅       | -                 | -          | "Elrond"                    | Nom du personnage                    |
-| `age`           | NUMERIC(5,0) | ❌     | ✅       | -                 | -          | 6497                        | Âge du personnage                    |
-| `physical_desc` | TEXT         | ❌     | ✅       | -                 | -          | "Grand et émiacé ..."       | Description physique du personnage   |
-| `bio`           | TEXT         | ❌     | ✅       | -                 | -          | "Seigneur de Rivendell ..." | Présentation du personnage           |
-| `campaing_id`   | INT          | ❌     | ✅       | game_campaign(id) | -          | 18                          | Référence vers la partie de jeu liée |
-| `user_id`       | INT          | ❌     | ✅       | user(id)          | -          | 2                           | Référence vers l'auteur de la fiche  |
-| `job_id`        | INT          | ❌     | ✅       | job(id)           | -          | 5                           | Référence vers le métier rattaché    |
+| Champ           | Type         | Unique | Not null | Référence    | Par défaut | Exemple de valeur           | Explication                          |
+| --------------- | ------------ | ------ | -------- | ------------ | ---------- | --------------------------- | ------------------------------------ |
+| `id`            | SERIAL       | ✅     | ✅       | -            | -          | 1                           | Identifiant unique de le personnage  |
+| `status`        | ENUM         | ❌     | ✅       | -            | "draft"    | "published"                 | Statut ("published" ou "draft")      |
+| `name`          | VARCHAR(50)  | ❌     | ✅       | -            | -          | "Elrond"                    | Nom du personnage                    |
+| `age`           | NUMERIC(5,0) | ❌     | ✅       | -            | -          | 6497                        | Âge du personnage                    |
+| `physical_desc` | TEXT         | ❌     | ✅       | -            | -          | "Grand et émiacé ..."       | Description physique du personnage   |
+| `bio`           | TEXT         | ❌     | ✅       | -            | -          | "Seigneur de Rivendell ..." | Présentation du personnage           |
+| `campaign_id`   | INT          | ❌     | ✅       | campaign(id) | -          | 18                          | Référence vers la partie de jeu liée |
+| `user_id`       | INT          | ❌     | ✅       | user(id)     | -          | 2                           | Référence vers l'auteur de la fiche  |
+| `job_id`        | INT          | ❌     | ✅       | job(id)      | -          | 5                           | Référence vers le métier rattaché    |
 
-### Table `game_campaign`
+### Table `campaign`
 
 | Champ     | Type   | Unique | Not null | Référence | Par défaut | Exemple de valeur | Explication                        |
 | --------- | ------ | ------ | -------- | --------- | ---------- | ----------------- | ---------------------------------- |
@@ -325,6 +325,7 @@ Notes :
 | -------------- | ---- | ------ | -------- | ------------------- | ---------- | ----------------- | ------------------------------------- |
 | `character_id` | INT  | ❌     | ✅       | character_sheet(id) | -          | 1                 | Référence vers le personnage rattaché |
 | `item_id`      | INT  | ❌     | ✅       | item(id)            | -          | 3                 | Référence vers l'objet                |
+| `nb`           | INT  | ❌     | ✅       | -                   | 1          | 2                 | nombre d'éléments (max 99)            |
 
 ### Table `item`
 

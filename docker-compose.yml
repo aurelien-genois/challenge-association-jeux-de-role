@@ -23,6 +23,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./src:/app/src
+      - ./prisma:/app/prisma
     container_name: ajdr-api
     ports:
       - "${PORT}:3000"

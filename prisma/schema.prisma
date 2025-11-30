@@ -12,3 +12,159 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum Role {
+  admin
+  member
+}
+
+enum Status {
+  draft
+  published
+}
+
+model User {
+  id        Int     @id @default(autoincrement())
+  email     String  @unique
+  name      String  @db.VarChar(50)
+  password  String  @db.VarChar(50)
+  role      Role    @default(member)
+  is_active Boolean @default(false)
+
+  character_sheets CharacterSheet[] // alias
+
+  @@map("user")
+}
+
+model CharacterSheet {
+  id            Int     @id @default(autoincrement())
+  status        Status  @default(draft)
+  name          String  @db.VarChar(50)
+  age           Decimal @db.Decimal(5, 0) // -99999 to +99999
+  physical_desc String
+  bio           String
+
+  campaign_id Int
+  campaign    Campaign @relation(fields: [campaign_id], references: [id])
+
+  user_id Int
+  user    User @relation(fields: [user_id], references: [id])
+
+  job_id Int
+  job    Job @relation(fields: [job_id], references: [id])
+
+  character_has_characteristics CharacterHasCharacteristic[] // alias
+  character_has_skills          CharacterHasSkill[] // alias
+  inventories                   Inventory[] // alias
+
+  @@map("character_sheet")
+}
+
+model Campaign {
+  id Int @id @default(autoincrement())
+
+  game_id Int
+  game    Game @relation(fields: [game_id], references: [id])
+
+  character_sheets CharacterSheet[] // alias
+
+  @@map("campaign")
+}
+
+model Game {
+  id Int @id @default(autoincrement())
+
+  title String @unique @db.VarChar(50)
+
+  game_has_characteristics GameHasCharacteristic[] // alias
+  campaigns                Campaign[] // alias
+
+  @@map("game")
+}
+
+model Characteristic {
+  id Int @id @default(autoincrement())
+
+  name String @unique @db.VarChar(50)
+
+  game_has_characteristics      GameHasCharacteristic[] // alias
+  character_has_characteristics CharacterHasCharacteristic[] // alias
+
+  @@map("characteristic")
+}
+
+model GameHasCharacteristic {
+  game_id Int
+  game    Game @relation(fields: [game_id], references: [id])
+
+  characteristic_id Int
+  characteristic    Characteristic @relation(fields: [characteristic_id], references: [id])
+
+  @@id(name: "game_has_characteristic_pkey", fields: [game_id, characteristic_id])
+  @@map("game_has_characteristic")
+}
+
+model CharacterHasCharacteristic {
+  character_sheet_id Int
+  character_sheet    CharacterSheet @relation(fields: [character_sheet_id], references: [id])
+
+  characteristic_id Int
+  characteristic    Characteristic @relation(fields: [characteristic_id], references: [id])
+
+  @@id(name: "character_has_characteristic_pkey", fields: [character_sheet_id, characteristic_id])
+  @@map("character_has_characteristic")
+}
+
+model Job {
+  id Int @id @default(autoincrement())
+
+  name String @unique @db.VarChar(50)
+
+  character_sheets CharacterSheet[] // alias
+
+  @@map("job")
+}
+
+model Skill {
+  id Int @id @default(autoincrement())
+
+  name String @unique @db.VarChar(50)
+
+  character_has_skills CharacterHasSkill[] // alias
+
+  @@map("skill")
+}
+
+model CharacterHasSkill {
+  character_sheet_id Int
+  character_sheet    CharacterSheet @relation(fields: [character_sheet_id], references: [id])
+
+  skill_id Int
+  skill    Skill @relation(fields: [skill_id], references: [id])
+
+  @@id(name: "character_has_skill_pkey", fields: [character_sheet_id, skill_id])
+  @@map("character_has_skill")
+}
+
+model Item {
+  id Int @id @default(autoincrement())
+
+  name String @unique @db.VarChar(50)
+
+  inventories Inventory[] // alias
+
+  @@map("item")
+}
+
+model Inventory {
+  character_sheet_id Int
+  character_sheet    CharacterSheet @relation(fields: [character_sheet_id], references: [id])
+
+  item_id Int
+  item    Item @relation(fields: [item_id], references: [id])
+
+  nb Decimal @db.Decimal(2, 0) // -99 to +99
+
+  @@id(name: "inventory_pkey", fields: [character_sheet_id, item_id])
+  @@map("inventory")
+}
