@@ -335,26 +335,70 @@ Notes :
 
 ## Routes (Endpoints API)
 
-(restriction : adhérent-administrateur, administrateur)
-(endpoints : caractéristiques, compétences, métiers, objets, parties de jeu, jeux)
+| Endpoint : jeux                | Méthode HTTP | Restriction(s) | Description                                         |
+| ------------------------------ | ------------ | -------------- | --------------------------------------------------- |
+| /api/games                     | GET          | Administrateur | voir toutes les jeux                                |
+| /api/games/:id                 | GET          | Administrateur | voir les détails d'un jeu                           |
+| /api/games/:id/campaigns       | GET          | Administrateur | voir toutes les parties d'un jeu                    |
+| /api/games/:id/characteristics | GET          | Administrateur | voir toutes les caractéristiques associées à un jeu |
+| /api/games                     | POST         | Administrateur | créer un jeu                                        |
+| /api/games/:id                 | PATCH        | Administrateur | modifier un jeu                                     |
+| /api/games/:id                 | DELETE       | Administrateur | supprimer un jeu                                    |
+
+| Endpoint : parties de jeu           | Méthode HTTP | Restriction(s) | Description                                   |
+| ----------------------------------- | ------------ | -------------- | --------------------------------------------- |
+| /api/campaigns                      | GET          | Administrateur | voir toutes les parties de jeu                |
+| /api/campaigns/:id                  | GET          | Administrateur | voir les détails d'une partie de jeu          |
+| /api/campaigns/:id/character-sheets | GET          | Administrateur | voir tous les personnages d'une partie de jeu |
+| /api/campaigns                      | POST         | Administrateur | créer une partie de jeu                       |
+| /api/campaigns/:id                  | PATCH        | Administrateur | modifier une partie de jeu                    |
+| /api/campaigns/:id                  | DELETE       | Administrateur | supprimer une partie de jeu                   |
+
+| Endpoint : objets | Méthode HTTP | Restriction(s) | Description            |
+| ----------------- | ------------ | -------------- | ---------------------- |
+| /api/items        | GET          | Administrateur | voir toutes les objets |
+| /api/items        | POST         | Administrateur | créer une objet        |
+| /api/items/:id    | PATCH        | Administrateur | modifier une objet     |
+| /api/items/:id    | DELETE       | Administrateur | supprimer une objet    |
+
+| Endpoint : métiers | Méthode HTTP | Restriction(s) | Description             |
+| ------------------ | ------------ | -------------- | ----------------------- |
+| /api/jobs          | GET          | Administrateur | voir toutes les métiers |
+| /api/jobs          | POST         | Administrateur | créer une métier        |
+| /api/jobs/:id      | PATCH        | Administrateur | modifier une métier     |
+| /api/jobs/:id      | DELETE       | Administrateur | supprimer une métier    |
+
+| Endpoint : compétences | Méthode HTTP | Restriction(s) | Description                 |
+| ---------------------- | ------------ | -------------- | --------------------------- |
+| /api/skills            | GET          | Administrateur | voir toutes les compétences |
+| /api/skills            | POST         | Administrateur | créer une compétence        |
+| /api/skills/:id        | PATCH        | Administrateur | modifier une compétence     |
+| /api/skills/:id        | DELETE       | Administrateur | supprimer une compétence    |
 
 | Endpoint : caractéristiques | Méthode HTTP | Restriction(s) | Description                      |
 | --------------------------- | ------------ | -------------- | -------------------------------- |
 | /api/characteristics        | GET          | Administrateur | voir toutes les caractéristiques |
+| /api/characteristics        | POST         | Administrateur | créer une caractéristique        |
+| /api/characteristics/:id    | PATCH        | Administrateur | modifier une caractéristique     |
+| /api/characteristics/:id    | DELETE       | Administrateur | supprimer une caractéristique    |
 
-... TODO
+| Endpoint : fiches personnage              | Méthode HTTP | Restriction(s)           | Description                                                   |
+| ----------------------------------------- | ------------ | ------------------------ | ------------------------------------------------------------- |
+| /api/character-sheets                     | GET          | Adhérent, Administrateur | voir toutes les fiches (filtre publiées si adhérent)          |
+| /api/character-sheets/:id                 | GET          | Adhérent, Administrateur | voir une fiche (filtre publiée si adhérent)                   |
+| /api/character-sheets/:id/characteristics | GET          | Adhérent, Administrateur | voir toutes les caractéristiques associées à la fiche         |
+| /api/character-sheets/:id/skills          | GET          | Adhérent, Administrateur | voir toutes les compétences associées à la fiche              |
+| /api/character-sheets/:id/inventory       | GET          | Adhérent, Administrateur | voir tous les objets associés à la fiche                      |
+| /api/character-sheets/:id/job             | GET          | Adhérent, Administrateur | voir le métier associé à la fiche                             |
+| /api/character-sheets                     | POST         | Adhérent, Administrateur | créer une fiche                                               |
+| /api/character-sheets/:id                 | PATCH        | Adhérent, Administrateur | modifier une fiche (filtre que j'ai créé (self) si adhérent)  |
+| /api/character-sheets/:id                 | DELETE       | Adhérent, Administrateur | supprimer une fiche (filtre que j'ai créé (self) si adhérent) |
 
-| Endpoint : fiches personnage | Méthode HTTP | Restriction(s)           | Description                                                   |
-| ---------------------------- | ------------ | ------------------------ | ------------------------------------------------------------- |
-| /api/character-sheets        | GET          | Adhérent, Administrateur | voir toutes les fiches (filtre publiées si adhérent)          |
-| /api/character-sheets/:id    | GET          | Adhérent, Administrateur | voir une fiche (filtre publiée si adhérent)                   |
-| /api/character-sheets        | POST         | Adhérent, Administrateur | créer une fiche                                               |
-| /api/character-sheets/:id    | PATCH        | Adhérent, Administrateur | modifier une fiche (filtre que j'ai créé (self) si adhérent)  |
-| /api/character-sheets/:id    | DELETE       | Adhérent, Administrateur | supprimer une fiche (filtre que j'ai créé (self) si adhérent) |
+Note :
 
-GET /api/character-sheets # utilisateur standard → fiches publiques
-GET /api/character-sheets?status=all # admin → toutes les fiches
-GET /api/character-sheets?status=draft # admin → uniquement les brouillons
+- GET /api/character-sheets (utilisateur standard → fiches publiques)
+- GET /api/character-sheets?status=all (admin → toutes les fiches)
+- GET /api/character-sheets?status=draft (admin → uniquement les brouillons)
 
 | Endpoint : authentification | Méthode HTTP | Restriction(s)           | Description                                           |
 | --------------------------- | ------------ | ------------------------ | ----------------------------------------------------- |
@@ -365,23 +409,25 @@ GET /api/character-sheets?status=draft # admin → uniquement les brouillons
 | /api/auth/logout            | GET          | Adhérent, Administrateur | me déconnecter (supprime acess & refresh tokens)      |
 | /api/auth/refresh           | GET          | Adhérent, Administrateur | renouveller le token d'accès (via refresh token)      |
 
-| Endpoint : utilisateurs         | Méthode HTTP | Restriction(s)           | Description                              |
-| ------------------------------- | ------------ | ------------------------ | ---------------------------------------- |
-| /api/users/me                   | GET          | Adhérent, Administrateur | voir aux détails de mon compte           |
-| /api/users                      | PATCH        | Adhérent, Administrateur | modifier mes informations personnelles   |
-| /api/users/change-password      | PATCH        | Adhérent, Administrateur | modifier mon mot de passe (envoie email) |
-| /api/users                      | DELETE       | Adhérent, Administrateur | supprimer mon compte                     |
-| /api/users/:id/character-sheets | GET          | Adhérent, Administrateur | récupérer mes fiches de personnages      |
-| /api/users                      | GET          | Administrateur           | voir tous les comptes                    |
-| /api/users/:id                  | GET          | Administrateur           | voir les détails d'un compte             |
-| /api/users/:id                  | PATCH        | Administrateur           | modifie un compte                        |
-| /api/users/:id/activate         | POST         | Administrateur           | activer un compte (envoie email)         |
-| /api/users/:id/deactivate       | POST         | Administrateur           | désactiver un compte (envoie email)      |
-| /api/users/:id/delete           | DELETE       | Administrateur           | supprimer un compte (envoie email)       |
+| Endpoint : utilisateurs    | Méthode HTTP | Restriction(s)           | Description                              |
+| -------------------------- | ------------ | ------------------------ | ---------------------------------------- |
+| /api/users/me              | GET          | Adhérent, Administrateur | voir aux détails de mon compte           |
+| /api/users                 | PATCH        | Adhérent, Administrateur | modifier mes informations personnelles   |
+| /api/users/change-password | PATCH        | Adhérent, Administrateur | modifier mon mot de passe (envoie email) |
+| /api/users                 | DELETE       | Adhérent, Administrateur | supprimer mon compte                     |
+| /api/users                 | GET          | Administrateur           | voir tous les comptes                    |
+| /api/users/:id             | GET          | Administrateur           | voir les détails d'un compte             |
+| /api/users/:id             | PATCH        | Administrateur           | modifie un compte                        |
+| /api/users/:id/activate    | POST         | Administrateur           | activer un compte (envoie email)         |
+| /api/users/:id/deactivate  | POST         | Administrateur           | désactiver un compte (envoie email)      |
+| /api/users/:id/delete      | DELETE       | Administrateur           | supprimer un compte (envoie email)       |
 
 ## Suites ?
 
-<!-- ajouter PNJ alliés
+<!--
+rattacher les métiers, objets et compétences à un jeu de rôle (comme les caractéristiques) => chaque jeu ne propose pas les mêmes métiers, objets et compétences
+
+ajouter PNJ alliés
   (status "joueur/non-joueur" sur les fiches,
   pouvoir associer plusieurs fiches entres-elles (alliées),
   pouvoir associer fiche "non-joueur" à un jeu de rôle)
