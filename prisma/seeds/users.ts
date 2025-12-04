@@ -13,7 +13,7 @@ export async function seedUsers() {
         email: config.admin.adminEmail,
         name: "Aurélien",
         password: adminPassword,
-        role: "amdin" as $Enums.Role,
+        role: "admin" as $Enums.Role,
         is_active: true,
       },
     });

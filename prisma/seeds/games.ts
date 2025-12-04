@@ -2,16 +2,16 @@ import { prisma } from "../client";
 import { faker } from "@faker-js/faker";
 
 export async function seedGames() {
-  // ***** GAME *****
+  // ***** GAMES *****
   const fakeGames = Array.from({ length: 4 }).map(() => ({
-    title: faker.string.sample({ min: 5, max: 50 }),
+    title: faker.word.noun(),
   }));
   const insertedGames = await prisma.game.createManyAndReturn({
     data: fakeGames,
     skipDuplicates: true,
   });
 
-  // ***** CAMPAIGN *****
+  // ***** CAMPAIGNS *****
   const fakeCampaings = Array.from({ length: 10 }).map(() => ({
     game_id: faker.number.int({
       min: insertedGames[0].id,
