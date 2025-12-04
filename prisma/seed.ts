@@ -1,5 +1,6 @@
 import { prisma } from "./client";
 import { seedGames } from "./seeds/games";
+import { seedUsers } from "./seeds/users";
 
 async function main() {
   // Clear tables in dependency order
@@ -7,11 +8,13 @@ async function main() {
   await prisma.characteristic.deleteMany();
   await prisma.campaign.deleteMany();
   await prisma.game.deleteMany();
+  await prisma.user.deleteMany();
 
   await seedGames();
 
   // ** 2 users
-  // user
+  await seedUsers();
+
   // ** 3 characters
   // item (createManyAndReturn for inventory item_id min/max)
   // job (createManyAndReturn for character-sheet job_id min/max)
