@@ -1,11 +1,13 @@
 import { Router } from "express";
-import type { Request, Response } from "express";
+import games from "./games.route.js";
 
 export const router = Router();
 
-router.use("/health", (_req: Request, res: Response) => {
+router.use("/health", (_req, res) => {
   res.status(200).json({
     message: "All good here!",
     timestamp: new Date().toISOString(),
   });
 });
+
+router.use("/games", games);
