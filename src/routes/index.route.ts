@@ -1,7 +1,7 @@
 import { Router } from "express";
-import games from "./games.route.js";
+import games from "./games.route";
 
-export const router = Router();
+const router = Router();
 
 router.use("/health", (_req, res) => {
   res.status(200).json({
@@ -11,3 +11,5 @@ router.use("/health", (_req, res) => {
 });
 
 router.use("/games", games);
+
+export default router;
