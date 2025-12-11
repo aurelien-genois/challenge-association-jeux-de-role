@@ -14,17 +14,19 @@ router.get(
   checkRoles(["admin"]),
   gamesController.getAll.bind(gamesController)
 );
-router.get(
-  "/:id",
-  checkRoles(["admin"]),
-  gamesController.getById.bind(gamesController)
-);
 
 router.get(
   "/:id/campaigns",
   checkRoles(["admin"]),
   gamesController.getAllOneGameCampaigns.bind(gamesController)
 );
+
+router.get(
+  "/:id",
+  checkRoles(["admin"]),
+  gamesController.getById.bind(gamesController)
+);
+
 router.get(
   "/:id/characteristics",
   checkRoles(["admin"]),
