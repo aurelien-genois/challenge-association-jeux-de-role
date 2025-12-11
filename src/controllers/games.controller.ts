@@ -124,5 +124,25 @@ export class GamesController {
     }
   }
 
-  async getAllOneGameCharacteristics(req: Request, res: Response) {}
+  async getGameCharacteristics(req: Request, res: Response) {
+    try {
+      const id = Number(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid game ID" });
+      }
+
+      const game = await this.gameService.getById(id);
+      if (!game) {
+        return res.status(404).json({ message: "Game not found" });
+      }
+
+      const characteristics = await this.gameService.getCharacteristicsByGameId(
+        id
+      );
+      return res.status(200).json(characteristics);
+    } catch (error) {
+      console.error("❌ Error fetching one game characteristics:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
 }

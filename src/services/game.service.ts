@@ -21,6 +21,13 @@ export class GameService {
     return this.prisma.campaign.findMany({ where: { game_id: id } });
   }
 
+  async getCharacteristicsByGameId(id: number) {
+    return this.prisma.gameHasCharacteristic.findMany({
+      where: { game_id: id },
+      include: { characteristic: true },
+    });
+  }
+
   async create(data: GameCreateOrUpdateInput) {
     return this.prisma.game.create({ data });
   }

@@ -30,7 +30,7 @@ router.get(
 router.get(
   "/:id/characteristics",
   checkRoles(["admin"]),
-  gamesController.getAllOneGameCharacteristics.bind(gamesController)
+  gamesController.getGameCharacteristics.bind(gamesController)
 );
 
 router.post(
