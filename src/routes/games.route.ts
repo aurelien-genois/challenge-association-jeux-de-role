@@ -18,7 +18,7 @@ router.get(
 router.get(
   "/:id/campaigns",
   checkRoles(["admin"]),
-  gamesController.getAllOneGameCampaigns.bind(gamesController)
+  gamesController.getGameCampaigns.bind(gamesController)
 );
 
 router.get(

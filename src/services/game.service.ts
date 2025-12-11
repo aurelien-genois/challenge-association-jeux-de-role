@@ -17,7 +17,7 @@ export class GameService {
     return this.prisma.game.findUnique({ where: { title } });
   }
 
-  async getCampaignsForId(id: number) {
+  async getCampaignsByGameId(id: number) {
     return this.prisma.campaign.findMany({ where: { game_id: id } });
   }
 

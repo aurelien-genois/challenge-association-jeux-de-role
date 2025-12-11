@@ -16,10 +16,10 @@ export class GamesController {
         return res.status(404).json({ message: "Game not found" });
       }
 
-      res.json(game);
+      return res.json(game);
     } catch (error) {
       console.error("❌ Error fetching game:", error);
-      res.status(500).json({ message: "Internal server error" });
+      return res.status(500).json({ message: "Internal server error" });
     }
   }
 
@@ -31,10 +31,10 @@ export class GamesController {
         return res.status(404).json({ message: "Game not found" });
       }
 
-      res.json(games);
+      return res.json(games);
     } catch (error) {
       console.error("❌ Error fetching games:", error);
-      res.status(500).json({ message: "Internal server error" });
+      return res.status(500).json({ message: "Internal server error" });
     }
   }
   async create(req: Request, res: Response) {
@@ -50,13 +50,13 @@ export class GamesController {
 
       const createdGame = await this.gameService.create({ title });
 
-      res.status(201).json(createdGame);
+      return res.status(201).json(createdGame);
     } catch (error) {
       if (error instanceof ZodError) {
         return res.status(400).json({ errors: error.message });
       }
       console.error("❌ Error creating game:", error);
-      res.status(500).json({ message: "Internal server error" });
+      return res.status(500).json({ message: "Internal server error" });
     }
   }
 
@@ -78,13 +78,13 @@ export class GamesController {
 
       const gameUpdatedId = await this.gameService.update(id, { title });
 
-      res.status(200).json(gameUpdatedId);
+      return res.status(200).json(gameUpdatedId);
     } catch (error) {
       if (error instanceof ZodError) {
         return res.status(400).json({ errors: error.message });
       }
       console.error("❌ Error updating game:", error);
-      res.status(500).json({ message: "Internal server error" });
+      return res.status(500).json({ message: "Internal server error" });
     }
   }
 
@@ -97,14 +97,14 @@ export class GamesController {
       }
 
       await this.gameService.delete(id);
-      res.status(204).json();
+      return res.status(204).json();
     } catch (error) {
       console.error("❌ Error deleting game:", error);
-      res.status(500).json({ message: "Internal server error" });
+      return res.status(500).json({ message: "Internal server error" });
     }
   }
 
-  async getAllOneGameCampaigns(req: Request, res: Response) {
+  async getGameCampaigns(req: Request, res: Response) {
     try {
       const id = Number(req.params.id);
       if (isNaN(id)) {
@@ -116,11 +116,11 @@ export class GamesController {
         return res.status(404).json({ message: "Game not found" });
       }
 
-      const campaigns = await this.gameService.getCampaignsForId(id);
-      res.status(200).json(campaigns);
+      const campaigns = await this.gameService.getCampaignsByGameId(id);
+      return res.status(200).json(campaigns);
     } catch (error) {
-      console.error("❌ Error fetching one game campaings:", error);
-      res.status(500).json({ message: "Internal server error" });
+      console.error("❌ Error fetching game campaigns:", error);
+      return res.status(500).json({ message: "Internal server error" });
     }
   }
 
