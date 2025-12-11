@@ -24,4 +24,8 @@ export class GameService {
   async update(id: number, data: GameCreateOrUpdateInput) {
     return this.prisma.game.update({ where: { id }, data });
   }
+
+  async delete(id: number) {
+    return this.prisma.game.delete({ where: { id } });
+  }
 }

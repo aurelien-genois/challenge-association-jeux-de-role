@@ -88,7 +88,24 @@ export class GamesController {
     }
   }
 
-  async delete(req: Request, res: Response) {}
+  async delete(req: Request, res: Response) {
+    try {
+      const id = parseInt(req.params.id, 10);
+      const game = await this.gameService.getById(id);
+      if (!game) {
+        return res.status(404).json({ message: "Game not found" });
+      }
+
+      await this.gameService.delete(id);
+      res.status(204).json();
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({ errors: error.message });
+      }
+      console.error("❌ Unexpected error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
 
   async getAllOneGameCampaigns(req: Request, res: Response) {}
 
