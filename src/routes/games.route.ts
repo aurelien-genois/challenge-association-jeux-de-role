@@ -4,7 +4,7 @@ import { GameService } from "../services/game.service";
 import { GamesController } from "../controllers/games.controller";
 import { checkRoles } from "../middlewares/checkRoles.middleware";
 
-export const router = Router();
+const router = Router();
 const gameService = new GameService(prisma);
 const gamesController = new GamesController(gameService);
 

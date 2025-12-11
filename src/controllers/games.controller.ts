@@ -2,7 +2,7 @@
 import type { Request, Response } from "express";
 import { GameService } from "../services/game.service";
 import { gameSchemas } from "../schemas/game.schema";
-import { ZodError } from "zod";
+import z, { ZodError } from "zod";
 
 export class GamesController {
   constructor(private gameService: GameService) {}
@@ -26,6 +26,8 @@ export class GamesController {
   async getAll(req: Request, res: Response) {
     try {
       const games = await this.gameService.getAll();
+
+      // ? add filters ?
 
       if (!games) {
         return res.status(404).json({ message: "Game not found" });
@@ -53,7 +55,7 @@ export class GamesController {
       return res.status(201).json(createdGame);
     } catch (error) {
       if (error instanceof ZodError) {
-        return res.status(400).json({ errors: error.message });
+        return res.status(400).json({ errors: z.prettifyError(error) });
       }
       console.error("❌ Error creating game:", error);
       return res.status(500).json({ message: "Internal server error" });
@@ -81,7 +83,7 @@ export class GamesController {
       return res.status(200).json(gameUpdatedId);
     } catch (error) {
       if (error instanceof ZodError) {
-        return res.status(400).json({ errors: error.message });
+        return res.status(400).json({ errors: z.prettifyError(error) });
       }
       console.error("❌ Error updating game:", error);
       return res.status(500).json({ message: "Internal server error" });
