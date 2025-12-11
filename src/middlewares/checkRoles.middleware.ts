@@ -2,6 +2,7 @@ import type { Role } from "../../prisma/generated/prisma/client";
 import type { Request, Response, NextFunction } from "express";
 
 // add userId/userRole to Express/Request interface
+/* eslint-disable @typescript-eslint/no-namespace */
 declare global {
   namespace Express {
     interface Request {
@@ -10,6 +11,7 @@ declare global {
     }
   }
 }
+/* eslint-enable @typescript-eslint/no-namespace */
 
 export function checkRoles(roles: Role[]) {
   return (req: Request, res: Response, next: NextFunction) => {
