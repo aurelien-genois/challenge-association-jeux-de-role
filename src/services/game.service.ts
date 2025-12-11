@@ -1,6 +1,6 @@
 // The service encapsulates database logic. It’s injected into the controller.
 import { PrismaClient } from "../../prisma/generated/prisma/client";
-import { type GameCreateInput } from "../schemas/game.schema";
+import { type GameCreateOrUpdateInput } from "../schemas/game.schema";
 
 export class GameService {
   constructor(private prisma: PrismaClient) {}
@@ -17,7 +17,11 @@ export class GameService {
     return this.prisma.game.findUnique({ where: { title } });
   }
 
-  async create(data: GameCreateInput) {
+  async create(data: GameCreateOrUpdateInput) {
     return this.prisma.game.create({ data });
+  }
+
+  async update(id: number, data: GameCreateOrUpdateInput) {
+    return this.prisma.game.update({ where: { id }, data });
   }
 }

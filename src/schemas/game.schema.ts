@@ -9,9 +9,11 @@ const gameTitleValidation = z
   .max(50, "Title must have at most 50 characters");
 
 export const gameSchemas = {
-  create: z.object({
+  createOrUpdate: z.object({
     title: gameTitleValidation,
   }),
 };
 
-export type GameCreateInput = z.infer<typeof gameSchemas.create>;
+export type GameCreateOrUpdateInput = z.infer<
+  typeof gameSchemas.createOrUpdate
+>;

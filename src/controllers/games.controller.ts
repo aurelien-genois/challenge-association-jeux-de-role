@@ -39,7 +39,7 @@ export class GamesController {
   }
   async create(req: Request, res: Response) {
     try {
-      const { title } = gameSchemas.create.parse(req.body); // Zod validation
+      const { title } = gameSchemas.createOrUpdate.parse(req.body); // Zod validation
 
       const gameWithSameTitle = await this.gameService.getByTitle(title);
       if (gameWithSameTitle) {
@@ -60,7 +60,33 @@ export class GamesController {
     }
   }
 
-  async update(req: Request, res: Response) {}
+  async update(req: Request, res: Response) {
+    try {
+      const id = parseInt(req.params.id, 10);
+      const game = await this.gameService.getById(id);
+      if (!game) {
+        return res.status(404).json({ message: "Game not found" });
+      }
+
+      const { title } = gameSchemas.createOrUpdate.parse(req.body); // Zod validation
+      const gameWithSameTitle = await this.gameService.getByTitle(title);
+      if (gameWithSameTitle) {
+        return res
+          .status(409)
+          .json({ message: "A game already exist with same name" });
+      }
+
+      const gameUpdatedId = await this.gameService.update(id, { title });
+
+      res.status(200).json(gameUpdatedId);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({ errors: error.message });
+      }
+      console.error("❌ Unexpected error:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  }
 
   async delete(req: Request, res: Response) {}
 
