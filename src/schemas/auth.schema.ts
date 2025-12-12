@@ -1,9 +1,5 @@
 import z from "zod";
-
-export const emailValidation = z.preprocess(
-  (val) => (typeof val === "string" ? val.trim().toLowerCase() : val),
-  z.email({ error: "Invalid email format" })
-);
+import { emailValidation } from "./users.schema";
 
 export const usernameValidation = z
   .string({
@@ -39,5 +35,4 @@ export const authSchema = {
   }),
 };
 
-export type Email = z.infer<typeof emailValidation>;
 export type RegisterInput = z.infer<typeof authSchema.register>;

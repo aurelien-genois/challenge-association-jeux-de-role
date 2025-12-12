@@ -1,19 +1,30 @@
 import { PrismaClient } from "../../prisma/generated/prisma/client";
-import type { Email, RegisterInput } from "../schemas/auth.schema";
+import type { RegisterInput } from "../schemas/auth.schema";
+import { UserService } from "./user.service";
+import bcrypt from "bcrypt";
 
 export class AuthService {
-  constructor(private prisma: PrismaClient) {}
-
-  async getByEmail(email: Email) {
-    return this.prisma.user.findUnique({ where: { email } });
-  }
+  constructor(private userService: UserService, private prisma: PrismaClient) {}
 
   async create(data: Omit<RegisterInput, "password_confirmation">) {
-    return this.prisma.user.create({
-      data,
+    const userWithSameEmail = await this.userService.getByEmail(data.email);
+    if (userWithSameEmail) throw new Error("User already exists");
+
+    const encryptedPassword = await bcrypt.hash(data.password, 10);
+
+    const user = this.prisma.user.create({
+      data: {
+        email: data.email,
+        name: data.name,
+        password: encryptedPassword,
+      },
       select: {
         id: true,
       },
     });
+
+    // TODO send confirmation Email (via EmailService)
+
+    return user;
   }
 }
