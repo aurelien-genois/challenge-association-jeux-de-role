@@ -8,6 +8,7 @@ export function generateAuthenticationTokens(user: User) {
     throw new Error("User authentication failed - invalid user data");
   }
 
+  // "sub" for subject of the JWT
   const accessToken = jwt.sign(
     { sub: user.id, email: user.email, role: user.role },
     config.server.jwtSecret,
