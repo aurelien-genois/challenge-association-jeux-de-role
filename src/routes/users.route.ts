@@ -8,6 +8,12 @@ const router = Router();
 const userService = new UserService(prisma);
 const usersController = new UsersController(userService);
 
+router.get(
+  "/",
+  checkRoles(["admin"]),
+  usersController.getAll.bind(usersController)
+);
+
 router.patch(
   "/:id/activate",
   checkRoles(["admin"]),

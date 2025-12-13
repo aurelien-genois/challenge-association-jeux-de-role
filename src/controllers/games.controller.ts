@@ -30,7 +30,7 @@ export class GamesController {
       // ? add filters ?
 
       if (!games) {
-        return res.status(404).json({ message: "Game not found" });
+        return res.status(404).json({ message: "No games found" });
       }
 
       return res.json(games);

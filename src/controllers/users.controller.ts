@@ -4,6 +4,23 @@ import { UserService } from "../services/user.service";
 export class UsersController {
   constructor(private userService: UserService) {}
 
+  async getAll(req: Request, res: Response) {
+    try {
+      const users = await this.userService.getAll();
+
+      // ? add filters ?
+
+      if (!users) {
+        return res.status(404).json({ message: "No users found" });
+      }
+
+      return res.json(users);
+    } catch (error) {
+      console.error("❌ Error fetching users:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
   // first argument is used when binding the function
   async toggleUserActiveState(
     activeStatus: boolean,

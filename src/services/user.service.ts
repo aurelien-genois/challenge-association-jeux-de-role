@@ -4,6 +4,18 @@ import type { Email } from "../schemas/users.schema";
 export class UserService {
   constructor(private prisma: PrismaClient) {}
 
+  async getAll() {
+    return this.prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        role: true,
+        is_active: true,
+      },
+    });
+  }
+
   async getByEmail(email: Email) {
     return this.prisma.user.findUnique({ where: { email } });
   }
