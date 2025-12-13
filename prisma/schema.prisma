@@ -23,6 +23,24 @@ enum Status {
   published
 }
 
+enum TypeToken {
+  refresh
+  verification_email
+  reset_password
+}
+
+model Token {
+  id        Int       @id @default(autoincrement())
+  token     String    @unique
+  type      TypeToken
+  expiresAt DateTime
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  created_at DateTime @default(now())
+}
+
 model User {
   id        Int     @id @default(autoincrement())
   email     String  @unique
@@ -32,6 +50,10 @@ model User {
   is_active Boolean @default(false)
 
   character_sheets CharacterSheet[] // alias
+  tokens           Token[] // alias
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   @@map("user")
 }
@@ -57,6 +79,9 @@ model CharacterSheet {
   character_has_skills          CharacterHasSkill[] // alias
   inventories                   Inventory[] // alias
 
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
   @@map("character_sheet")
 }
 
@@ -67,6 +92,8 @@ model Campaign {
   game    Game @relation(fields: [game_id], references: [id])
 
   character_sheets CharacterSheet[] // alias
+
+  created_at DateTime @default(now())
 
   @@map("campaign")
 }
@@ -79,6 +106,9 @@ model Game {
   game_has_characteristics GameHasCharacteristic[] // alias
   campaigns                Campaign[] // alias
 
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
   @@map("game")
 }
 
@@ -90,6 +120,9 @@ model Characteristic {
   game_has_characteristics      GameHasCharacteristic[] // alias
   character_has_characteristics CharacterHasCharacteristic[] // alias
 
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
   @@map("characteristic")
 }
 
@@ -99,6 +132,8 @@ model GameHasCharacteristic {
 
   characteristic_id Int
   characteristic    Characteristic @relation(fields: [characteristic_id], references: [id])
+
+  created_at DateTime @default(now())
 
   @@id(name: "game_has_characteristic_pkey", fields: [game_id, characteristic_id])
   @@map("game_has_characteristic")
@@ -111,6 +146,8 @@ model CharacterHasCharacteristic {
   characteristic_id Int
   characteristic    Characteristic @relation(fields: [characteristic_id], references: [id])
 
+  created_at DateTime @default(now())
+
   @@id(name: "character_has_characteristic_pkey", fields: [character_sheet_id, characteristic_id])
   @@map("character_has_characteristic")
 }
@@ -122,6 +159,9 @@ model Job {
 
   character_sheets CharacterSheet[] // alias
 
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
   @@map("job")
 }
 
@@ -132,6 +172,9 @@ model Skill {
 
   character_has_skills CharacterHasSkill[] // alias
 
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
   @@map("skill")
 }
 
@@ -141,6 +184,8 @@ model CharacterHasSkill {
 
   skill_id Int
   skill    Skill @relation(fields: [skill_id], references: [id])
+
+  created_at DateTime @default(now())
 
   @@id(name: "character_has_skill_pkey", fields: [character_sheet_id, skill_id])
   @@map("character_has_skill")
@@ -153,6 +198,9 @@ model Item {
 
   inventories Inventory[] // alias
 
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
   @@map("item")
 }
 
@@ -164,6 +212,8 @@ model Inventory {
   item    Item @relation(fields: [item_id], references: [id])
 
   nb Decimal @db.Decimal(2, 0) // -99 to +99
+
+  created_at DateTime @default(now())
 
   @@id(name: "inventory_pkey", fields: [character_sheet_id, item_id])
   @@map("inventory")
