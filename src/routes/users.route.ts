@@ -9,6 +9,12 @@ const userService = new UserService(prisma);
 const usersController = new UsersController(userService);
 
 router.get(
+  "/me",
+  checkRoles(["admin", "member"]),
+  usersController.getMyAccount.bind(usersController)
+);
+
+router.get(
   "/",
   checkRoles(["admin"]),
   usersController.getAll.bind(usersController)

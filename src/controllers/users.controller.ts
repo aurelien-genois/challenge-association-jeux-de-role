@@ -4,6 +4,24 @@ import { UserService } from "../services/user.service";
 export class UsersController {
   constructor(private userService: UserService) {}
 
+  async getMyAccount(req: Request, res: Response) {
+    try {
+      if (!req.userId) {
+        throw new Error("Unauthorized");
+      }
+
+      const user = await this.userService.getById(req.userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      return res.json(user);
+    } catch (error) {
+      console.error("❌ Error fetching my account:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
   async getAll(req: Request, res: Response) {
     try {
       const users = await this.userService.getAll();

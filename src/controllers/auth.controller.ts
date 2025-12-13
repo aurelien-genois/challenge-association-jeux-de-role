@@ -75,7 +75,7 @@ export class AuthController {
         // TODO error class : error instanceof ConflictError
         return res.status(409).json({ message: "The credentials are invalid" });
       }
-      console.error("❌ Error on registration:", error);
+      console.error("❌ Error on login:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   }
