@@ -30,13 +30,13 @@ enum TypeToken {
 }
 
 model Token {
-  id        Int       @id @default(autoincrement())
-  token     String    @unique
-  type      TypeToken
-  expiresAt DateTime
+  id         Int       @id @default(autoincrement())
+  token      String    @unique
+  type       TypeToken
+  expires_at DateTime
 
-  userId Int
-  user   User @relation(fields: [userId], references: [id])
+  user_id Int
+  user    User @relation(fields: [user_id], references: [id])
 
   created_at DateTime @default(now())
 }

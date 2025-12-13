@@ -33,6 +33,12 @@ export const authSchema = {
   }),
 };
 
+export interface Token {
+  token: string;
+  type: string;
+  expiresInMS: number;
+}
+
 export type RegisterInput = z.infer<typeof authSchema.register>;
 export type LoginInput = z.infer<typeof authSchema.login>;
 export type ForgotPasswordInput = z.infer<typeof authSchema.forgotPassword>;

@@ -24,6 +24,7 @@ services:
     volumes:
       - ./src:/app/src
       - ./prisma:/app/prisma
+      - ./server.config.ts:/server.config.ts
     container_name: ajdr-api
     ports:
       - "${PORT}:3000"
