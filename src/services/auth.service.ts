@@ -59,4 +59,8 @@ export class AuthService {
 
     return { safeUser, accessToken, refreshToken };
   }
+
+  async revokeRefreshToken(token: string) {
+    await this.prisma.token.delete({ where: { token } });
+  }
 }

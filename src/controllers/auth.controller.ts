@@ -21,7 +21,7 @@ export class AuthController {
       httpOnly: true,
       maxAge: refreshToken.expiresInMS,
       secure: config.server.secure,
-      path: "/auth/refresh",
+      // path: "/auth/refresh", would block req.cookies.refreshToken for /auth/logout
     });
   }
 
@@ -76,6 +76,23 @@ export class AuthController {
         return res.status(409).json({ message: "The credentials are invalid" });
       }
       console.error("❌ Error on registration:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
+  async logout(req: Request, res: Response) {
+    try {
+      console.log(req.cookies);
+      const refreshToken = req.cookies.refreshToken;
+      if (refreshToken) {
+        await this.authService.revokeRefreshToken(refreshToken); // important to remove a security risk
+      }
+
+      res.clearCookie("accessToken");
+      res.clearCookie("refreshToken"); // { path: "/auth/refresh" } would block req.cookies.refreshToken for /auth/logout
+      res.status(200).json({ message: "Logout successful." });
+    } catch (error) {
+      console.error("❌ Error on logout:", error);
       return res.status(500).json({ message: "Internal server error" });
     }
   }
