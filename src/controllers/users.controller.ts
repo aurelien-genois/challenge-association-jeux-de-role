@@ -21,6 +21,25 @@ export class UsersController {
     }
   }
 
+  async getbyId(req: Request, res: Response) {
+    try {
+      const userId = parseInt(req.params.id, 10);
+      if (isNaN(userId)) {
+        return res.status(400).json({ message: "Invalid user ID" });
+      }
+
+      const user = await this.userService.getById(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      return res.json(user);
+    } catch (error) {
+      console.error("❌ Error fetching user:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
   // first argument is used when binding the function
   async toggleUserActiveState(
     activeStatus: boolean,

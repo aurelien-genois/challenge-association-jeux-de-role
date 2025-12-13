@@ -14,6 +14,12 @@ router.get(
   usersController.getAll.bind(usersController)
 );
 
+router.get(
+  "/:id",
+  checkRoles(["admin"]),
+  usersController.getbyId.bind(usersController)
+);
+
 router.patch(
   "/:id/activate",
   checkRoles(["admin"]),

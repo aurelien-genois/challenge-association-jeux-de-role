@@ -10,8 +10,11 @@ export class GamesController {
   async getById(req: Request, res: Response) {
     try {
       const id = parseInt(req.params.id, 10);
-      const game = await this.gameService.getById(id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid game ID" });
+      }
 
+      const game = await this.gameService.getById(id);
       if (!game) {
         return res.status(404).json({ message: "Game not found" });
       }
