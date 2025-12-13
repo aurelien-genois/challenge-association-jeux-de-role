@@ -96,4 +96,24 @@ export class AuthController {
       return res.status(500).json({ message: "Internal server error" });
     }
   }
+
+  async refreshAccessToken(req: Request, res: Response) {
+    try {
+      const rawToken = req.cookies?.refreshToken || req.body?.refreshToken;
+      if (!rawToken) {
+        throw new Error("Refresh token not provided");
+      }
+
+      const { accessToken, refreshToken } =
+        await this.authService.refreshAccessToken(rawToken);
+
+      this.setAccessTokenCookie(res, accessToken);
+      this.setRefreshTokenCookie(res, refreshToken);
+
+      res.json("New access token generated successfully.");
+    } catch (error) {
+      console.error("❌ Error on refresh access token:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
 }

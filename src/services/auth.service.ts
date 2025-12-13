@@ -8,7 +8,7 @@ import type { User } from "../../prisma/generated/prisma/client";
 export class AuthService {
   constructor(private userService: UserService, private prisma: PrismaClient) {}
 
-  async replaceRefreshTokenInDatabase(token: Token, user: User) {
+  async replaceRefreshTokenInDatabase(token: Token, user: User): Promise<void> {
     await this.prisma.token.deleteMany({
       where: { user_id: user.id, type: "refresh" },
     });
@@ -60,7 +60,47 @@ export class AuthService {
     return { safeUser, accessToken, refreshToken };
   }
 
+  async refreshAccessToken(token: string) {
+    const existingRefreshToken = await this.prisma.token.findFirst({
+      where: { token: token, type: "refresh" },
+      include: {
+        user: {}, // all user data
+      },
+    });
+
+    if (
+      !existingRefreshToken ||
+      !existingRefreshToken.user ||
+      !existingRefreshToken.user.role
+    ) {
+      throw new Error("Invalid refresh token");
+    }
+    if (
+      !existingRefreshToken.expires_at ||
+      existingRefreshToken.expires_at < new Date()
+    ) {
+      if (existingRefreshToken.id) {
+        await this.prisma.token.delete({
+          where: { id: existingRefreshToken.id },
+        });
+      }
+      throw new Error("Expired refresh token");
+    }
+
+    const { accessToken, refreshToken } = generateAuthenticationTokens(
+      existingRefreshToken.user
+    );
+    await this.replaceRefreshTokenInDatabase(
+      refreshToken,
+      existingRefreshToken.user
+    );
+
+    const { password: _pw, ...safeUser } = existingRefreshToken.user;
+
+    return { safeUser, accessToken, refreshToken };
+  }
+
   async revokeRefreshToken(token: string) {
-    await this.prisma.token.delete({ where: { token } });
+    await this.prisma.token.delete({ where: { token, type: "refresh" } });
   }
 }
