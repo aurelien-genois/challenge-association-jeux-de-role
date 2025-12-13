@@ -37,4 +37,25 @@ export class AuthController {
       return res.status(500).json({ message: "Internal server error" });
     }
   }
+
+  async login(req: Request, res: Response) {
+    try {
+      const { email, password } = authSchema.login.parse(req.body);
+
+      const safeUser = await this.authService.login({ email, password });
+
+      return res.status(200).json(safeUser);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        return res.status(400).json({ errors: z.prettifyError(error) });
+      } else if (error.message === "User already exists") {
+        // TODO error class : error instanceof ConflictError
+        return res
+          .status(409)
+          .json({ message: "A user already exists with same email" });
+      }
+      console.error("❌ Error on registration:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
 }

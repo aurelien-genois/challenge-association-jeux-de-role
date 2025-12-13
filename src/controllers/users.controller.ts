@@ -52,6 +52,7 @@ export class UsersController {
         return res.status(400).json({ message: "Invalid user ID" });
       }
 
+      // ? move to userService.setActiveState ?
       const user = await this.userService.getById(userId);
       if (!user) {
         return res.status(404).json({ message: "User not found" });

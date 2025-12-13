@@ -1,5 +1,5 @@
 import { PrismaClient } from "../../prisma/generated/prisma/client";
-import type { RegisterInput } from "../schemas/auth.schema";
+import type { RegisterInput, LoginInput } from "../schemas/auth.schema";
 import { UserService } from "./user.service";
 import bcrypt from "bcrypt";
 
@@ -26,5 +26,32 @@ export class AuthService {
     // TODO send confirmation Email (via EmailService)
 
     return user;
+  }
+
+  async login(data: LoginInput) {
+    const user = await this.userService.getByEmail(data.email);
+    if (!user) throw new Error("User not found");
+
+    if (!user.is_active) {
+      throw new Error("This account is not active.");
+    }
+
+    const isMatching = await bcrypt.compare(data.password, user.password);
+    if (!isMatching) {
+      throw new Error("Credentials are invalid.");
+    }
+
+    /*
+    const { accessToken, refreshToken } = generateAuthenticationTokens(user);
+
+    await replaceRefreshTokenInDatabase(refreshToken, user);
+
+    setAccessTokenCookie(res, accessToken);
+    setRefreshTokenCookie(res, refreshToken);
+
+    const { password: _pw, ...safeUser } = user;
+
+    return safeUser
+    */
   }
 }

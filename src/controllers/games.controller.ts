@@ -46,6 +46,7 @@ export class GamesController {
     try {
       const { title } = gameSchemas.createOrUpdate.parse(req.body); // Zod validation
 
+      // ? move to userService.setActiveState ?
       const gameWithSameTitle = await this.gameService.getByTitle(title);
       if (gameWithSameTitle) {
         return res
@@ -68,11 +69,17 @@ export class GamesController {
   async update(req: Request, res: Response) {
     try {
       const id = parseInt(req.params.id, 10);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid game ID" });
+      }
+
+      // ? move to userService.setActiveState ?
       const game = await this.gameService.getById(id);
       if (!game) {
         return res.status(404).json({ message: "Game not found" });
       }
 
+      // ? move to userService.setActiveState ?
       const { title } = gameSchemas.createOrUpdate.parse(req.body); // Zod validation
       const gameWithSameTitle = await this.gameService.getByTitle(title);
       if (gameWithSameTitle) {
@@ -96,6 +103,11 @@ export class GamesController {
   async delete(req: Request, res: Response) {
     try {
       const id = parseInt(req.params.id, 10);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid game ID" });
+      }
+
+      // ? move to userService.setActiveState ?
       const game = await this.gameService.getById(id);
       if (!game) {
         return res.status(404).json({ message: "Game not found" });
@@ -116,6 +128,7 @@ export class GamesController {
         return res.status(400).json({ message: "Invalid game ID" });
       }
 
+      // ? move to userService.setActiveState ?
       const game = await this.gameService.getById(id);
       if (!game) {
         return res.status(404).json({ message: "Game not found" });
@@ -136,6 +149,7 @@ export class GamesController {
         return res.status(400).json({ message: "Invalid game ID" });
       }
 
+      // ? move to userService.setActiveState ?
       const game = await this.gameService.getById(id);
       if (!game) {
         return res.status(404).json({ message: "Game not found" });
