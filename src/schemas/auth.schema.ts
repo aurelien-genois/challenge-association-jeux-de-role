@@ -1,18 +1,5 @@
 import z from "zod";
-import { emailValidation } from "./users.schema";
-
-export const usernameValidation = z
-  .string({
-    error: (iss) =>
-      iss.input === undefined
-        ? "Username is required."
-        : "Username must be a string.",
-  })
-  .min(3, { error: "Username must be at least 3 characters" })
-  .max(50, { error: "Username must be at most 50 characters." })
-  .regex(/^[\p{L}][\p{L}' -]*$/u, {
-    error: "Username contains invalid characters.",
-  });
+import { emailValidation, usernameValidation } from "./users.schema";
 
 export const passwordValidation = z
   .string({
@@ -33,6 +20,20 @@ export const authSchema = {
     password: passwordValidation,
     password_confirmation: passwordValidation,
   }),
+  login: z.object({
+    email: emailValidation,
+    password: passwordValidation,
+  }),
+  forgotPassword: z.object({
+    email: emailValidation,
+  }),
+  resetPassword: z.object({
+    password: passwordValidation,
+    password_confirmation: passwordValidation,
+  }),
 };
 
 export type RegisterInput = z.infer<typeof authSchema.register>;
+export type LoginInput = z.infer<typeof authSchema.login>;
+export type ForgotPasswordInput = z.infer<typeof authSchema.forgotPassword>;
+export type ResetPasswordInput = z.infer<typeof authSchema.resetPassword>;
