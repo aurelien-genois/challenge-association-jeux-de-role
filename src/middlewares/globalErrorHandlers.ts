@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import z from "zod";
 import { HttpClientError } from "../utils/errors";
+import { logger } from "../utils/logger";
 
 export function globalErrorHandler(
   error: unknown,
@@ -16,6 +17,15 @@ export function globalErrorHandler(
       ? error.stack
       : undefined,
   };
+
+  // Winston logger
+  if (
+    error instanceof Error ||
+    error instanceof z.ZodError ||
+    error instanceof HttpClientError
+  ) {
+    logger.error(`An error occurred: ${error.message}`);
+  }
 
   if (error instanceof z.ZodError) {
     res.status(400).json({

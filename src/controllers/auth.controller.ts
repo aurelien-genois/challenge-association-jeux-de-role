@@ -48,7 +48,6 @@ export class AuthController {
       if (error instanceof ZodError) {
         return res.status(400).json({ errors: z.prettifyError(error) });
       } else if (error instanceof HttpClientError) {
-        // TODO error class : error instanceof ConflictError
         return res
           .status(409)
           .json({ message: "A user already exists with same email" });
@@ -73,7 +72,6 @@ export class AuthController {
       if (error instanceof ZodError) {
         return res.status(400).json({ errors: z.prettifyError(error) });
       } else if (error instanceof HttpClientError) {
-        // TODO error class : error instanceof ConflictError
         return res.status(409).json({ message: "The credentials are invalid" });
       }
       console.error("❌ Error on login:", error);
