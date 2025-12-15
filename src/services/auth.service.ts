@@ -4,6 +4,11 @@ import { UserService } from "./user.service";
 import bcrypt from "bcrypt";
 import { generateAuthenticationTokens } from "../utils/token";
 import type { User } from "../../prisma/generated/prisma/client";
+import {
+  UnauthorizedError,
+  ForbiddenError,
+  ConflictError,
+} from "../utils/errors";
 
 export class AuthService {
   constructor(private userService: UserService, private prisma: PrismaClient) {}
@@ -24,7 +29,7 @@ export class AuthService {
 
   async create(data: Omit<RegisterInput, "password_confirmation">) {
     const userWithSameEmail = await this.userService.getByEmail(data.email);
-    if (userWithSameEmail) throw new Error("User already exists");
+    if (userWithSameEmail) throw new ConflictError("User already exists");
 
     const encryptedPassword = await bcrypt.hash(data.password, 10);
 
@@ -46,11 +51,11 @@ export class AuthService {
 
   async login(data: LoginInput) {
     const user = await this.userService.getByEmail(data.email);
-    if (!user) throw new Error("User not found");
-    if (!user.is_active) throw new Error("This account is not active.");
+    if (!user) throw new UnauthorizedError("User not found");
+    if (!user.is_active) throw new UnauthorizedError("Not active user.");
 
     const isMatching = await bcrypt.compare(data.password, user.password);
-    if (!isMatching) throw new Error("Credentials are invalid.");
+    if (!isMatching) throw new UnauthorizedError("Credentials are invalid.");
 
     const { accessToken, refreshToken } = generateAuthenticationTokens(user);
     await this.replaceRefreshTokenInDatabase(refreshToken, user);
@@ -73,7 +78,7 @@ export class AuthService {
       !existingRefreshToken.user ||
       !existingRefreshToken.user.role
     ) {
-      throw new Error("Invalid refresh token");
+      throw new UnauthorizedError("Invalid refresh token");
     }
     if (
       !existingRefreshToken.expires_at ||
@@ -84,7 +89,7 @@ export class AuthService {
           where: { id: existingRefreshToken.id },
         });
       }
-      throw new Error("Expired refresh token");
+      throw new ForbiddenError("Expired refresh token");
     }
 
     const { accessToken, refreshToken } = generateAuthenticationTokens(

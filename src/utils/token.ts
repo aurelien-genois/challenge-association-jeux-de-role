@@ -2,10 +2,13 @@ import crypto from "node:crypto";
 import jwt from "jsonwebtoken";
 import { config } from "../../server.config.js";
 import type { User } from "../../prisma/generated/prisma/client.js";
+import { UnauthorizedError } from "./errors.js";
 
 export function generateAuthenticationTokens(user: User) {
   if (!user.id || !user.role) {
-    throw new Error("User authentication failed - invalid user data");
+    throw new UnauthorizedError(
+      "User authentication failed - invalid user data"
+    );
   }
 
   // "sub" for subject of the JWT

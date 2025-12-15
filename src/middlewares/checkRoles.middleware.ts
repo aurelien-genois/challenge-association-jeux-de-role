@@ -3,6 +3,7 @@ import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import type { JwtPayload } from "jsonwebtoken";
 import { config } from "../../server.config";
+import { ForbiddenError, UnauthorizedError } from "../utils/errors";
 
 // add userId/userRole to Express/Request interface
 /* eslint-disable @typescript-eslint/no-namespace */
@@ -28,7 +29,7 @@ function verifyAndDecodeJWT(accessToken: string): JwtPayload {
     return payload;
   } catch (error) {
     console.error(error);
-    throw new Error("Invalid or expired access token");
+    throw new ForbiddenError("Invalid or expired access token");
   }
 }
 
@@ -39,7 +40,7 @@ function extractAccessToken(req: Request): string {
   if (typeof req.headers?.authorization === "string") {
     return req.headers.authorization.split(" ")[1]; // if Authorization: `Bearer ${accessToken.token}`
   }
-  throw new Error("Access Token not provided");
+  throw new UnauthorizedError("Access Token not provided");
 }
 
 export function checkRoles(roles: Role[]) {

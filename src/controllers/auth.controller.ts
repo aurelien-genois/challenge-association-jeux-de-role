@@ -4,6 +4,7 @@ import { authSchema } from "../schemas/auth.schema";
 import z, { ZodError } from "zod";
 import type { Token } from "../schemas/auth.schema";
 import { config } from "../../server.config";
+import { BadRequestError, HttpClientError } from "../utils/errors";
 
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -46,7 +47,7 @@ export class AuthController {
     } catch (error) {
       if (error instanceof ZodError) {
         return res.status(400).json({ errors: z.prettifyError(error) });
-      } else if (error.message === "User already exists") {
+      } else if (error instanceof HttpClientError) {
         // TODO error class : error instanceof ConflictError
         return res
           .status(409)
@@ -71,7 +72,7 @@ export class AuthController {
     } catch (error) {
       if (error instanceof ZodError) {
         return res.status(400).json({ errors: z.prettifyError(error) });
-      } else if (error.message === "Credentials are invalid.") {
+      } else if (error instanceof HttpClientError) {
         // TODO error class : error instanceof ConflictError
         return res.status(409).json({ message: "The credentials are invalid" });
       }
@@ -101,7 +102,7 @@ export class AuthController {
     try {
       const rawToken = req.cookies?.refreshToken || req.body?.refreshToken;
       if (!rawToken) {
-        throw new Error("Refresh token not provided");
+        throw new BadRequestError("Refresh token not provided");
       }
 
       const { accessToken, refreshToken } =

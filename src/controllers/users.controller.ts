@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { UserService } from "../services/user.service";
+import { BadRequestError } from "../utils/errors";
 
 export class UsersController {
   constructor(private userService: UserService) {}
@@ -7,7 +8,7 @@ export class UsersController {
   async getMyAccount(req: Request, res: Response) {
     try {
       if (!req.userId) {
-        throw new Error("Unauthorized");
+        throw new BadRequestError("Invalid user id");
       }
 
       const user = await this.userService.getById(req.userId);
