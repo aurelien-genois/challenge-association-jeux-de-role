@@ -5,8 +5,16 @@ import cookieParser from "cookie-parser";
 import { globalErrorHandler } from "./middlewares/globalErrorHandler.middleware";
 import { loggerMiddleware } from "./middlewares/httpLogger.middleware";
 import morgan from "morgan";
+import { config } from "../server.config";
+import helmet from "helmet";
+import cors from "cors";
 
 const app = express();
+
+// Help secure Express apps by setting default HTTP response headers.
+app.use(helmet());
+// ensure origin matches your frontend URLs and credentials: true is set if you rely on cookie
+app.use(cors({ origin: config.server.allowedOrigins, credentials: true }));
 
 app.use(cookieParser());
 
