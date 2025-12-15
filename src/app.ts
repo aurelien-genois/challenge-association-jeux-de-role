@@ -9,13 +9,19 @@ import { config } from "../server.config";
 import helmet from "helmet";
 import cors from "cors";
 import bodySanitizer from "./middlewares/bodySanitizer.middleware";
+import { globalLimiter } from "./middlewares/rateLimiter.middleware";
 
 const app = express();
+
+// tells Express to trust the first proxy in front of it, affects how Express determines the client’s IP (req.ip)
+app.set("trust proxy", 1);
 
 // Help secure Express apps by setting default HTTP response headers.
 app.use(helmet());
 // ensure origin matches your frontend URLs and credentials: true is set if you rely on cookie
 app.use(cors({ origin: config.server.allowedOrigins, credentials: true }));
+
+app.use(globalLimiter);
 
 app.use(express.json()); // Parses incoming requests with Content-Type: application/json (converts raw JSON into req.body)
 

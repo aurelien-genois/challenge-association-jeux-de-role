@@ -6,7 +6,7 @@ ForbiddenError (403) → authenticated but not allowed (e.g. role mismatch, revo
 
 export class HttpClientError extends Error {
   status: number;
-  name;
+  name: string;
 
   constructor(message: string, { status }: { status: number }) {
     super(message); // inherit message property
@@ -41,5 +41,11 @@ export class NotFoundError extends HttpClientError {
 export class ConflictError extends HttpClientError {
   constructor(message: string) {
     super(message, { status: 409 });
+  }
+}
+
+export class RateLimitError extends HttpClientError {
+  constructor(message = "Too many requests, please try again later.") {
+    super(message, { status: 429 });
   }
 }
