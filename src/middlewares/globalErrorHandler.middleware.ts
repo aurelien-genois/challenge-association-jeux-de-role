@@ -1,4 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
+import type { ErrorResponse, ErrorDetail } from "../types/errorResponse";
 import z from "zod";
 import { HttpClientError } from "../utils/errors";
 import { logger } from "../utils/logger";
@@ -10,13 +11,21 @@ export function globalErrorHandler(
   _next: NextFunction
 ) {
   const isProduction = process.env.NODE_ENV === "production";
-  const baseError = {
+
+  const buildErrorResponse = (
+    status: number,
+    type: string,
+    message: string,
+    details?: ErrorDetail[]
+  ): ErrorResponse => ({
+    status,
+    error: { type, message, details },
     stack: isProduction
       ? undefined
       : error instanceof Error
       ? error.stack
       : undefined,
-  };
+  });
 
   // Winston logger
   if (
@@ -28,41 +37,36 @@ export function globalErrorHandler(
   }
 
   if (error instanceof z.ZodError) {
-    res.status(400).json({
-      ...baseError,
-      status: 400,
-      error: {
-        type: "ZodError",
-        message: "Invalid input",
-        details: error.issues.map((issue) => ({
+    res.status(400).json(
+      buildErrorResponse(
+        400,
+        "ZodError",
+        "Invalid input",
+        error.issues.map((issue) => ({
           path: issue.path,
           message: issue.message,
-        })),
-      },
-    });
+        }))
+      )
+    );
     return;
   }
 
   if (error instanceof HttpClientError) {
-    res.status(error.status).json({
-      ...baseError,
-      status: error.status,
-      error: {
-        type: error.name,
-        message: error.message,
-      },
-    });
+    res
+      .status(error.status)
+      .json(buildErrorResponse(error.status, error.name, error.message));
     return;
   }
 
-  res.status(500).json({
-    ...baseError,
-    status: 500,
-    error: {
-      type: "InternalServerError",
-      message: "An unexpected error occurred",
-    },
-  });
+  res
+    .status(500)
+    .json(
+      buildErrorResponse(
+        500,
+        "InternalServerError",
+        "An unexpected error occurred"
+      )
+    );
 
   return;
 }
