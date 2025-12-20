@@ -1,7 +1,7 @@
 // The controller handle HTTP
 import type { Request, Response } from "express";
-import { GameService } from "../services/game.service";
-import { gameSchemas } from "../schemas/game.schema";
+import { GameService } from "../services/game.service.js";
+import { gameSchemas } from "../schemas/game.schema.js";
 import z, { ZodError } from "zod";
 
 export class GamesController {

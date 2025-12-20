@@ -1,5 +1,5 @@
 import z from "zod";
-import { emailValidation, usernameValidation } from "./users.schema";
+import { emailValidation, usernameValidation } from "./users.schema.js";
 
 export const passwordValidation = z
   .string({

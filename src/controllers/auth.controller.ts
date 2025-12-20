@@ -1,10 +1,10 @@
 import type { Request, Response } from "express";
-import { AuthService } from "../services/auth.service";
-import { authSchema } from "../schemas/auth.schema";
+import { AuthService } from "../services/auth.service.js";
+import { authSchema } from "../schemas/auth.schema.js";
 import z, { ZodError } from "zod";
-import type { Token } from "../schemas/auth.schema";
-import { config } from "../../server.config";
-import { BadRequestError, HttpClientError } from "../utils/errors";
+import type { Token } from "../schemas/auth.schema.js";
+import { config } from "../../server.config.js";
+import { BadRequestError, HttpClientError } from "../utils/errors.js";
 
 export class AuthController {
   constructor(private authService: AuthService) {}

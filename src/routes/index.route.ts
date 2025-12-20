@@ -1,7 +1,7 @@
 import { Router } from "express";
-import games from "./games.route";
-import auth from "./auth.route";
-import users from "./users.route";
+import games from "./games.route.js";
+import auth from "./auth.route.js";
+import users from "./users.route.js";
 
 const router = Router();
 

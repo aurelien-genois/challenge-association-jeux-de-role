@@ -1,9 +1,9 @@
-import type { Role } from "../../prisma/generated/prisma/client";
+import type { Role } from "../../prisma/generated/prisma/client.js";
 import type { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import type { JwtPayload } from "jsonwebtoken";
-import { config } from "../../server.config";
-import { ForbiddenError, UnauthorizedError } from "../utils/errors";
+import { config } from "../../server.config.js";
+import { ForbiddenError, UnauthorizedError } from "../utils/errors.js";
 
 // add userId/userRole to Express/Request interface
 /* eslint-disable @typescript-eslint/no-namespace */

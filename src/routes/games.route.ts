@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { prisma } from "../../prisma/client";
-import { GameService } from "../services/game.service";
-import { GamesController } from "../controllers/games.controller";
-import { checkRoles } from "../middlewares/checkRoles.middleware";
+import { prisma } from "../../prisma/client.js";
+import { GameService } from "../services/game.service.js";
+import { GamesController } from "../controllers/games.controller.js";
+import { checkRoles } from "../middlewares/checkRoles.middleware.js";
 
 const router = Router();
 const gameService = new GameService(prisma);

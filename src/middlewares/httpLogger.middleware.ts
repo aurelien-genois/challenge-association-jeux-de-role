@@ -1,5 +1,5 @@
 import morgan from "morgan";
-import { logger } from "../utils/logger";
+import { logger } from "../utils/logger.js";
 
 export const loggerMiddleware = morgan(
   // format: string or callback, the function is expected to return a string that will be the log line, or undefined / null to skip logging

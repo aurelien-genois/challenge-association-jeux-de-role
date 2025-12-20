@@ -1,14 +1,18 @@
-import { PrismaClient } from "../../prisma/generated/prisma/client";
-import type { Token, RegisterInput, LoginInput } from "../schemas/auth.schema";
-import { UserService } from "./user.service";
+import { PrismaClient } from "../../prisma/generated/prisma/client.js";
+import type {
+  Token,
+  RegisterInput,
+  LoginInput,
+} from "../schemas/auth.schema.js";
+import { UserService } from "./user.service.js";
 import bcrypt from "bcrypt";
-import { generateAuthenticationTokens } from "../utils/token";
-import type { User } from "../../prisma/generated/prisma/client";
+import { generateAuthenticationTokens } from "../utils/token.js";
+import type { User } from "../../prisma/generated/prisma/client.js";
 import {
   UnauthorizedError,
   ForbiddenError,
   ConflictError,
-} from "../utils/errors";
+} from "../utils/errors.js";
 
 export class AuthService {
   constructor(private userService: UserService, private prisma: PrismaClient) {}

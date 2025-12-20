@@ -1,5 +1,5 @@
-import { PrismaClient } from "../../prisma/generated/prisma/client";
-import type { Email } from "../schemas/users.schema";
+import { PrismaClient } from "../../prisma/generated/prisma/client.js";
+import type { Email } from "../schemas/users.schema.js";
 
 export class UserService {
   constructor(private prisma: PrismaClient) {}

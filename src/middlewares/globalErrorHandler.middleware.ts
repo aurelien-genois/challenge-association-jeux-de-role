@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from "express";
-import type { ErrorResponse, ErrorDetail } from "../types/errorResponse";
+import type { ErrorResponse, ErrorDetail } from "../types/errorResponse.js";
 import z from "zod";
-import { HttpClientError } from "../utils/errors";
-import { logger } from "../utils/logger";
+import { HttpClientError } from "../utils/errors.js";
+import { logger } from "../utils/logger.js";
 
 export function globalErrorHandler(
   error: unknown,

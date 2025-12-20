@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { prisma } from "../../prisma/client";
-import { UserService } from "../services/user.service";
-import { UsersController } from "../controllers/users.controller";
-import { checkRoles } from "../middlewares/checkRoles.middleware";
+import { prisma } from "../../prisma/client.js";
+import { UserService } from "../services/user.service.js";
+import { UsersController } from "../controllers/users.controller.js";
+import { checkRoles } from "../middlewares/checkRoles.middleware.js";
 
 const router = Router();
 const userService = new UserService(prisma);

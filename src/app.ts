@@ -1,15 +1,15 @@
 import "dotenv/config";
 import express from "express";
-import router from "./routes/index.route";
+import router from "./routes/index.route.js";
 import cookieParser from "cookie-parser";
-import { globalErrorHandler } from "./middlewares/globalErrorHandler.middleware";
-import { loggerMiddleware } from "./middlewares/httpLogger.middleware";
+import { globalErrorHandler } from "./middlewares/globalErrorHandler.middleware.js";
+import { loggerMiddleware } from "./middlewares/httpLogger.middleware.js";
 import morgan from "morgan";
-import { config } from "../server.config";
+import { config } from "../server.config.js";
 import helmet from "helmet";
 import cors from "cors";
-import bodySanitizer from "./middlewares/bodySanitizer.middleware";
-import { globalLimiter } from "./middlewares/rateLimiter.middleware";
+import bodySanitizer from "./middlewares/bodySanitizer.middleware.js";
+import { globalLimiter } from "./middlewares/rateLimiter.middleware.js";
 
 const app = express();
 

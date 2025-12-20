@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import { UserService } from "../services/user.service";
-import { BadRequestError } from "../utils/errors";
+import { UserService } from "../services/user.service.js";
+import { BadRequestError } from "../utils/errors.js";
 
 export class UsersController {
   constructor(private userService: UserService) {}

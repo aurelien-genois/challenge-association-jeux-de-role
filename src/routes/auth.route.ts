@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { prisma } from "../../prisma/client";
-import { AuthService } from "../services/auth.service";
-import { UserService } from "../services/user.service";
-import { AuthController } from "../controllers/auth.controller";
-import { createLimiter } from "../middlewares/rateLimiter.middleware";
+import { prisma } from "../../prisma/client.js";
+import { AuthService } from "../services/auth.service.js";
+import { UserService } from "../services/user.service.js";
+import { AuthController } from "../controllers/auth.controller.js";
+import { createLimiter } from "../middlewares/rateLimiter.middleware.js";
 
 const router = Router();
 const userService = new UserService(prisma);

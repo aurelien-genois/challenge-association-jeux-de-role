@@ -1,6 +1,6 @@
 // The service encapsulates database logic. It’s injected into the controller.
-import { PrismaClient } from "../../prisma/generated/prisma/client";
-import { type GameCreateOrUpdateInput } from "../schemas/game.schema";
+import { PrismaClient } from "../../prisma/generated/prisma/client.js";
+import { type GameCreateOrUpdateInput } from "../schemas/game.schema.js";
 
 export class GameService {
   constructor(private prisma: PrismaClient) {}

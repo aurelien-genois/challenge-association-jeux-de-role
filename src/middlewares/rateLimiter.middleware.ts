@@ -1,5 +1,5 @@
 import rateLimit from "express-rate-limit";
-import { RateLimitError } from "../utils/errors";
+import { RateLimitError } from "../utils/errors.js";
 
 export const createLimiter = (max: number) =>
   rateLimit({

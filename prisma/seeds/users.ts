@@ -1,6 +1,6 @@
-import { prisma } from "../client";
+import { prisma } from "../client.js";
 import { faker } from "@faker-js/faker";
-import { $Enums } from "../generated/prisma/client";
+import { $Enums } from "../generated/prisma/client.js";
 import { config } from "../../server.config.js";
 import bcrypt from "bcrypt";
 

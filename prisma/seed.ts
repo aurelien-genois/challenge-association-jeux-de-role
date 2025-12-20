@@ -1,7 +1,7 @@
-import { prisma } from "./client";
-import { seedGames } from "./seeds/games";
-import { seedUsers } from "./seeds/users";
-import { seedCharacterSheets } from "./seeds/characterSheets";
+import { prisma } from "./client.js";
+import { seedGames } from "./seeds/games.js";
+import { seedUsers } from "./seeds/users.js";
+import { seedCharacterSheets } from "./seeds/characterSheets.js";
 
 async function main() {
   // Clear tables in dependency order (! $executeRawUnsafe only for seedling !)
