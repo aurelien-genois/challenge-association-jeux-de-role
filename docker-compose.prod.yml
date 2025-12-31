@@ -1,0 +1,85 @@
+services:
+  ajdr-db:
+    image: postgres:latest
+    container_name: ajdr-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - ajdr:/var/lib/postgresql
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - proxy_default
+
+  ajdr-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: ajdr-api
+    ports:
+      - "${PORT}:3000"
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - DATABASE_URL=${DATABASE_URL_DOCKER}
+      - PORT=3000
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - VIRTUAL_HOST=${SSL_DOMAIN}
+      - VIRTUAL_PATH=/
+      - LETSENCRYPT_HOST=${SSL_DOMAIN}
+      - LETSENCRYPT_EMAIL=aurelien.genois@gmail.com
+    restart: unless-stopped
+    depends_on:
+      ajdr-db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - proxy_default
+
+  ajdr-client:
+    container_name: ajdr-client
+    build:
+      context: ./client
+      dockerfile_inline: |
+        FROM nginx:alpine
+        RUN rm -rf /usr/share/nginx/html/*
+        COPY ./ /usr/share/nginx/html
+        EXPOSE 80
+        CMD ["nginx", "-g", "daemon off;"]
+      # dockerfile: Dockerfile
+      # args:
+      #   - VITE_API_BASE_URL=${VITE_API_BASE_URL}
+    environment:
+      - VIRTUAL_HOST=${SSL_DOMAIN_CLIENT}
+      - VIRTUAL_PATH=/
+      - LETSENCRYPT_HOST=${SSL_DOMAIN_CLIENT}
+      - LETSENCRYPT_EMAIL=aurelien.genois@gmail.com
+    ports:
+      - ${CLIENT_LOCAL_PORT:-8071}:80
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/index.html"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - proxy_default
+
+volumes:
+  ajdr:
+
+networks:
+  proxy_default:
+    external: true

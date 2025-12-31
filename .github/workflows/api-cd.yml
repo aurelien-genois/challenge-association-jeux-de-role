@@ -57,5 +57,5 @@ jobs:
             cd /var/www/html/ajdr
             export NODE_ENV=production
             docker-compose pull
-            docker-compose up -d --build
+            docker-compose -f docker-compose.prod.yml up -d --build
           EOF
