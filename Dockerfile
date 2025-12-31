@@ -1,15 +1,17 @@
 FROM node:22-alpine
 
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
 WORKDIR /app
 
-COPY package*.json ./
+COPY package.json pnpm-lock.yaml ./
 
-RUN npm install
+RUN pnpm install
 
 COPY ./ ./
 
-RUN npm run db:generate
+RUN pnpm db:generate
 
-# RUN npm run build if use "start:prod" instead of "start:dev"
+# RUN pnpm build if use "start:prod" instead of "start:dev"
 
-CMD ["npm", "run", "start:dev"]
+CMD ["pnpm", "start:dev"]
