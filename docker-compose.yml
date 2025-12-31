@@ -29,7 +29,7 @@ services:
     ports:
       - "${PORT}:3000"
     environment:
-      - NODE_ENV=development
+      - NODE_ENV=${NODE_ENV}
       - DATABASE_URL=${DATABASE_URL_DOCKER}
       - PORT=3000
       - ADMIN_EMAIL=${ADMIN_EMAIL}

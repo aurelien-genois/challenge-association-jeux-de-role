@@ -1,0 +1,61 @@
+name: Deploy API AJDR
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: deployment-ajdr
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add server to known_hosts
+        run: |
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Write .env file
+        run: |
+          ssh  -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            cd /var/www/html/ajdr
+            cat > .env <<EOL
+            PORT=${{ secrets.PORT }}
+            CLIENT_LOCAL_PORT=${{ secrets.CLIENT_LOCAL_PORT }}
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
+            ALLOWED_ORIGINS=${{ vars.ALLOWED_ORIGINS }}
+            FRONT_URL=${{ vars.FRONT_URL }}
+            BACK_URL=${{ vars.BACK_URL }}
+            NODE_ENV=production
+            DATABASE_URL=${{ secrets.DATABASE_URL}}
+            DATABASE_URL_DOCKER=${{ secrets.DATABASE_URL_DOCKER}}
+            POSTGRES_USER=${{ secrets.POSTGRES_USER}}
+            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD}}
+            POSTGRES_DB=${{ secrets.POSTGRES_DB}}
+            ADMIN_EMAIL=${{ secrets.ADMIN_EMAIL}}
+            ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD}}
+            SSL_DOMAIN=${{ vars.SSL_DOMAIN}}
+            SSL_DOMAIN_CLIENT=${{ vars.SSL_DOMAIN_CLIENT}}
+            EOL
+          EOF
+
+      - name: Deploy to server
+        run: |
+          rsync -avz --delete \
+            --exclude='.env' \
+            -e "ssh -o StrictHostKeyChecking=no" \
+            ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/html/ajdr
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+            cd /var/www/html/ajdr
+            export NODE_ENV=production
+            docker-compose pull
+            docker-compose up -d --build
+          EOF
