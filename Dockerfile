@@ -4,9 +4,11 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /app
 
+# Allow Prisma + bcrypt + engines to run postinstall scripts
 RUN pnpm config set enable-pre-post-scripts true
-# RUN pnpm add -g @pnpm/exec
-# RUN pnpm exec pnpm approve-builds prisma @prisma/engines
+
+# Approve required build scripts
+RUN pnpm approve-builds prisma @prisma/engines bcrypt
 
 COPY package.json pnpm-lock.yaml ./
 
