@@ -51,6 +51,38 @@ services:
     networks:
       - proxy_default
 
+  ajdr-client:
+    container_name: ajdr-client
+    build:
+      context: ./client
+      dockerfile_inline: |
+        FROM nginx:alpine
+        RUN rm -rf /usr/share/nginx/html/*
+        COPY ./ /usr/share/nginx/html
+        EXPOSE 80
+        CMD ["nginx", "-g", "daemon off;"]
+      # dockerfile: Dockerfile
+      # args:
+      #   - VITE_API_BASE_URL=${VITE_API_BASE_URL}
+    volumes:
+      - ./client:/usr/share/nginx/html
+    environment:
+      - VIRTUAL_HOST=${SSL_DOMAIN_CLIENT}
+      - VIRTUAL_PATH=/
+      - LETSENCRYPT_HOST=${SSL_DOMAIN_CLIENT}
+      - LETSENCRYPT_EMAIL=aurelien.genois@gmail.com
+    ports:
+      - ${CLIENT_LOCAL_PORT:-8071}:80
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/index.html"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+    networks:
+      - proxy_default
+
 volumes:
   ajdr:
 
