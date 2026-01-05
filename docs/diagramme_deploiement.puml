@@ -1,0 +1,76 @@
+@startuml Déploiement
+
+actor Navigateur as client
+
+node "Virtual Private Server (VPS)" {
+
+  node "Docker Network 'proxy_default'" {
+
+    node "Conteneur API" {
+      component "Serveur HTTP (API Node.js)" as api #LightBlue {
+        port ajdrApi3000
+        artifact "Code JS généré\n(source TypeScript)" as apiNode
+      }
+    }
+
+    node "Conteneur Client" {
+      component "Serveur HTTP (NGinx)" as spa #LightBlue {
+        port ajdrClient80
+        artifact "Fichiers statiques générés\n(source React/Vite)"
+      }
+    }
+
+    node "Reverse Proxy (NGinx)" as proxy {
+      port 80
+      port 443
+      component "Serveur HTTP (NGinx)" #LightBlue {
+        artifact "nginx.conf" as nginx
+      }
+    }
+
+    node "SSL Certificates (NGinx Acme Companion)" as acmeCompanion {
+      action "letsencrypt" as letsencrypt #LightBlue
+    }
+
+    node "Conteneur Base de Données" {
+      database "Serveur PostgreSQL" as database #LightCyan {
+        port ajdrDb5432
+        artifact "tables ajdr_db" as db_tables
+      }
+    }
+
+  }
+
+  folder "Docker Volume" {
+    artifact "volume data" as volume_data
+    artifact "volume nginx.conf" as volume_nginx.conf
+    artifact "volume docker.sock" as volume_docker.sock
+    artifact "volume certs" as volume_certs
+    artifact "volume vhost" as volume_vhost
+    artifact "volume html" as volume_html
+  }
+
+  client -- 443
+  client -- 80
+
+  proxy -- ajdrApi3000
+  proxy -- ajdrClient80
+
+  apiNode -(0- ajdrDb5432
+
+  db_tables ~~ volume_data: (name "ajdr")
+
+  nginx -- volume_vhost: (name "vhost")
+  nginx -- volume_html: (name "html")
+  nginx -- volume_certs: (name "certs")
+  nginx -- volume_nginx.conf: (bind mount)
+  nginx -- volume_docker.sock: (bind mount)
+
+  letsencrypt -- volume_vhost: (name "vhost")
+  letsencrypt -- volume_html: (name "html")
+  letsencrypt -- volume_certs: (name "certs")
+  letsencrypt -- volume_docker.sock: (bind mount)
+
+
+}
+@enduml
