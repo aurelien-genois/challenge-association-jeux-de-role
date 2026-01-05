@@ -4,8 +4,50 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
+      - develop
 
 jobs:
+  run_tests:
+    runs-on: ubuntu-latest
+    environment: test
+    steps:
+          # Récupérer le code du dépôt dans le runner (action officiel)
+      - name: checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install dependencies
+        run: pnpm config set enable-pre-post-scripts true
+        run: pnpm approve-builds prisma @prisma/engines bcrypt
+        run: pnpm install
+
+      # Prisma client pour environnement du runner
+      - name: Generate Prisma Client
+        run: pnpm db:generate
+
+      # Tests unitaires
+      - name: Run unit tests
+        run: pnpm test:unit
+
+      # Tests d'intégration
+      - name: Run integration tests
+        run: pnpm run ghact:test:spec
+        env:
+          PORT: ${{ vars.PORT }}
+          ALLOWED_ORIGINS: ${{ vars.ALLOWED_ORIGINS }}
+          JWT_SECRET: ${{ vars.JWT_SECRET }}
+          NODE_ENV: ${{ vars.NODE_ENV }}
+          SALT_ROUNDS: ${{ vars.SALT_ROUNDS }}
+          DATABASE_URL: ${{ vars.DATABASE_URL }}
+          FRONT_URL: ${{ vars.FRONT_URL }}
+
   deploy:
     runs-on: ubuntu-latest
     environment: deployment-ajdr
