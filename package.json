@@ -20,7 +20,9 @@
     "docker:db:seed": "docker exec -it ajdr-api pnpm db:seed",
     "docker:db:reset": "docker exec -it ajdr-api pnpm db:migrate:reset",
     "docker:db:migrate:dev": "docker exec -it ajdr-api pnpm db:migrate:dev",
-    "docker:db:generate": "docker exec -it ajdr-api pnpm db:generate"
+    "docker:db:generate": "docker exec -it ajdr-api pnpm db:generate",
+    "test:unit": "tsx --test ./**/*.unit.test.ts",
+    "test:unit:only": "tsx --test --test-only ./**/*.unit.test.ts"
   },
   "keywords": [],
   "author": "aurelien.genois@gmail.com",
