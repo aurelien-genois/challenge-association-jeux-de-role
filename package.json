@@ -21,8 +21,11 @@
     "docker:db:reset": "docker exec -it ajdr-api pnpm db:migrate:reset",
     "docker:db:migrate:dev": "docker exec -it ajdr-api pnpm db:migrate:dev",
     "docker:db:generate": "docker exec -it ajdr-api pnpm db:generate",
-    "test:unit": "tsx --test ./**/*.unit.test.ts",
-    "test:unit:only": "tsx --test --test-only ./**/*.unit.test.ts"
+    "test:unit": "DEBUG=app:test tsx --test ./**/*.unit.test.ts",
+    "test:unit:only": "DEBUG=app:test tsx --test --test-only ./**/*.unit.test.ts",
+    "test:spec": "DEBUG=app:test tsx --test --env-file=./test/config/.env.test --import ./test/config/global-setup.ts --experimental-test-isolation=none ./**/*.spec.test.ts",
+    "test:spec:only": "DEBUG=app:test tsx --test --test-only --env-file=./test/config/.env.test --import ./test/config/global-setup.ts --experimental-test-isolation=none ./**/*.spec.test.ts",
+    "ghact:test:spec": "DEBUG=app:test tsx --test --import ./test/config/global-setup.ts --experimental-test-isolation=none ./**/*.spec.test.ts"
   },
   "keywords": [],
   "author": "aurelien.genois@gmail.com",
