@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: test
     steps:
-          # Récupérer le code du dépôt dans le runner (action officiel)
+      # Récupérer le code du dépôt dans le runner (action officiel)
       - name: checkout code
         uses: actions/checkout@v4
 
@@ -24,9 +24,8 @@ jobs:
           node-version: "22"
 
       - name: Install dependencies
-        run: pnpm config set enable-pre-post-scripts true
-        run: pnpm approve-builds prisma @prisma/engines bcrypt
-        run: pnpm install
+        run: |
+          pnpm config set enable-pre-post-scripts true pnpm approve-builds prisma @prisma/engines bcrypt pnpm install
 
       # Prisma client pour environnement du runner
       - name: Generate Prisma Client
@@ -48,6 +47,7 @@ jobs:
           FRONT_URL: ${{ vars.FRONT_URL }}
 
   deploy:
+    needs: run_tests
     runs-on: ubuntu-latest
     environment: deployment-ajdr
 
