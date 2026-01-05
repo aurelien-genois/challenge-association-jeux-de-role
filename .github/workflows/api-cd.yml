@@ -43,8 +43,7 @@ jobs:
           PORT: ${{ vars.PORT }}
           ALLOWED_ORIGINS: ${{ vars.ALLOWED_ORIGINS }}
           JWT_SECRET: ${{ vars.JWT_SECRET }}
-          NODE_ENV: ${{ vars.NODE_ENV }}
-          SALT_ROUNDS: ${{ vars.SALT_ROUNDS }}
+          NODE_ENV: test
           DATABASE_URL: ${{ vars.DATABASE_URL }}
           FRONT_URL: ${{ vars.FRONT_URL }}
 
