@@ -40,6 +40,8 @@ jobs:
       # Tests unitaires
       - name: Run unit tests
         run: pnpm test:unit
+        env:
+          JWT_SECRET: ${{ vars.JWT_SECRET }}
 
       # Tests d'intégration
       - name: Run integration tests
