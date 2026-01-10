@@ -56,6 +56,7 @@ jobs:
           FRONT_URL: ${{ vars.FRONT_URL }}
 
   deploy:
+    if: github.event_name == 'push'
     needs: run_tests
     runs-on: ubuntu-latest
     environment: deployment-ajdr
