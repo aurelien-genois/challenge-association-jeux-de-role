@@ -5,7 +5,7 @@ import type { User } from "../../prisma/generated/prisma/client.js";
 import { UnauthorizedError } from "./errors.js";
 
 export function generateAuthenticationTokens(user: User) {
-  if (!user.id || !user.role) {
+  if (!(user.id != undefined && user.id >= 0) || !user.role) {
     throw new UnauthorizedError(
       "User authentication failed - invalid user data"
     );

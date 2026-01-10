@@ -8,7 +8,7 @@ export const usernameValidation = z
         : "Username must be a string.",
   })
   .min(3, { error: "Username must be at least 3 characters" })
-  .max(50, { error: "Username must be at most 50 characters." })
+  .max(12, { error: "Username must be at most 50 characters." })
   .regex(/^[\p{L}][\p{L}' -]*$/u, {
     error: "Username contains invalid characters.",
   });
