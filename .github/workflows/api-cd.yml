@@ -7,6 +7,7 @@ on:
 
 jobs:
   run_tests:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     environment: test
     steps:
@@ -69,11 +70,11 @@ jobs:
 
       - name: Add server to known_hosts
         run: |
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -p ${{ secrets.SSH_PORT }} -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
       - name: Write .env file
         run: |
-          ssh  -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             cd /var/www/html/ajdr
             cat > .env <<EOL
             PORT=${{ secrets.PORT }}
@@ -100,9 +101,9 @@ jobs:
         run: |
           rsync -avz --delete \
             --exclude='.env' \
-            -e "ssh -o StrictHostKeyChecking=no" \
+            -e "ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no" \
             ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/html/ajdr
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          ssh -p ${{ secrets.SSH_PORT }} -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
             cd /var/www/html/ajdr
             export NODE_ENV=production
             docker-compose pull
