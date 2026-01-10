@@ -43,7 +43,39 @@ export function buildAuthenticatedRequester(user: User) {
         ...options,
       });
     },
-    // TODO ... post, patch, delete
+    async post(endpoint: string, options: RequestInit = {}) {
+      return fetch(`${apiBaseUrl}${endpoint}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken.token}`,
+          "Content-Type": "application/json",
+          ...(options.headers || {}),
+        },
+        ...options,
+      });
+    },
+    async patch(endpoint: string, options: RequestInit = {}) {
+      return fetch(`${apiBaseUrl}${endpoint}`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${accessToken.token}`,
+          "Content-Type": "application/json",
+          ...(options.headers || {}),
+        },
+        ...options,
+      });
+    },
+    async delete(endpoint: string, options: RequestInit = {}) {
+      return fetch(`${apiBaseUrl}${endpoint}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${accessToken.token}`,
+          "Content-Type": "application/json",
+          ...(options.headers || {}),
+        },
+        ...options,
+      });
+    },
   };
 }
 
@@ -58,5 +90,34 @@ export const unauthenticatedRequester = {
       ...options,
     });
   },
-  // TODO ... post, patch, delete
+  async post(endpoint: string, options: RequestInit = {}) {
+    return fetch(`${apiBaseUrl}${endpoint}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(options.headers || {}),
+      },
+      ...options,
+    });
+  },
+  async patch(endpoint: string, options: RequestInit = {}) {
+    return fetch(`${apiBaseUrl}${endpoint}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        ...(options.headers || {}),
+      },
+      ...options,
+    });
+  },
+  async delete(endpoint: string, options: RequestInit = {}) {
+    return fetch(`${apiBaseUrl}${endpoint}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        ...(options.headers || {}),
+      },
+      ...options,
+    });
+  },
 };
