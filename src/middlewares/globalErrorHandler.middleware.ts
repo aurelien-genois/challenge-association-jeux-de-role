@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import type { ErrorResponse, ErrorDetail } from "../types/errorResponse.js";
-import z from "zod";
+import z, { ZodError } from "zod";
 import { HttpClientError } from "../utils/errors.js";
 import { logger } from "../utils/logger.js";
 
@@ -12,53 +12,47 @@ export function globalErrorHandler(
 ) {
   const isProduction = process.env.NODE_ENV === "production";
 
-  const buildErrorResponse = (
+  const buildErrorResponse = function (
     status: number,
     type: string,
     message: string,
     details?: ErrorDetail[]
-  ): ErrorResponse => ({
-    status,
-    error: { type, message, details },
-    stack: isProduction
-      ? undefined
-      : error instanceof Error
-      ? error.stack
-      : undefined,
-  });
+  ): ErrorResponse {
+    return {
+      status,
+      error: { type, message, details },
+      stack: isProduction
+        ? undefined
+        : error instanceof Error
+        ? error.stack
+        : undefined,
+    };
+  };
 
-  // Winston logger
-  if (
-    error instanceof Error ||
-    error instanceof z.ZodError ||
-    error instanceof HttpClientError
-  ) {
-    logger.error(`An error occurred: ${error.message}`);
-  }
-
-  if (error instanceof z.ZodError) {
-    res.status(400).json(
+  if (error instanceof ZodError) {
+    logger.error(`An 400 error occurred: ${error.message}`);
+    return res.status(400).json(
       buildErrorResponse(
         400,
         "ZodError",
-        "Invalid input",
+        `Invalid input: ${z.prettifyError(error)}`,
         error.issues.map((issue) => ({
           path: issue.path,
           message: issue.message,
         }))
       )
     );
-    return;
   }
 
   if (error instanceof HttpClientError) {
-    res
+    logger.error(`An ${error.status} error occurred: ${error.message}`);
+    return res
       .status(error.status)
       .json(buildErrorResponse(error.status, error.name, error.message));
-    return;
   }
 
-  res
+  logger.error(`An unexpected error occurred`);
+  return res
     .status(500)
     .json(
       buildErrorResponse(
@@ -67,6 +61,4 @@ export function globalErrorHandler(
         "An unexpected error occurred"
       )
     );
-
-  return;
 }
