@@ -39,6 +39,7 @@ jobs:
       - name: Run integration tests
         run: pnpm run ghact:test:spec
         env:
+          HUSKY: 0
           PORT: ${{ vars.PORT }}
           ALLOWED_ORIGINS: ${{ vars.ALLOWED_ORIGINS }}
           JWT_SECRET: ${{ vars.JWT_SECRET }}
@@ -85,6 +86,7 @@ jobs:
             ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD}}
             SSL_DOMAIN=${{ vars.SSL_DOMAIN}}
             SSL_DOMAIN_CLIENT=${{ vars.SSL_DOMAIN_CLIENT}}
+            HUSKY=0
             EOL
           EOF
 

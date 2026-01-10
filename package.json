@@ -25,7 +25,8 @@
     "test:unit:only": "DEBUG=app:test tsx --test --test-only ./**/*.unit.test.ts",
     "test:spec": "DEBUG=app:test tsx --test --env-file=./test/config/.env.test --import ./test/config/global-setup.ts --experimental-test-isolation=none ./**/*.spec.test.ts",
     "test:spec:only": "DEBUG=app:test tsx --test --test-only --env-file=./test/config/.env.test --import ./test/config/global-setup.ts --experimental-test-isolation=none ./**/*.spec.test.ts",
-    "ghact:test:spec": "DEBUG=app:test tsx --test --import ./test/config/global-setup.ts --experimental-test-isolation=none ./**/*.spec.test.ts"
+    "ghact:test:spec": "DEBUG=app:test tsx --test --import ./test/config/global-setup.ts --experimental-test-isolation=none ./**/*.spec.test.ts",
+    "prepare": "husky || true"
   },
   "keywords": [],
   "author": "aurelien.genois@gmail.com",
@@ -47,6 +48,7 @@
     "@types/uuid": "^10.0.0",
     "eslint": "^9.39.2",
     "globals": "^16.5.0",
+    "husky": "^9.1.7",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.51.0"
