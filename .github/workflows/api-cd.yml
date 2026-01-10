@@ -27,7 +27,9 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pnpm config set enable-pre-post-scripts true pnpm approve-builds prisma @prisma/engines bcrypt pnpm install
+          pnpm config set enable-pre-post-scripts true
+          pnpm approve-builds prisma @prisma/engines bcrypt
+          pnpm install --frozen-lockfile
 
       # Prisma client pour environnement du runner
       - name: Generate Prisma Client
