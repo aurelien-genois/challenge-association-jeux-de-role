@@ -3,3 +3,4 @@ dist
 .env
 /prisma/generated/prisma
 /logs/*
+/test/config/.env.test
