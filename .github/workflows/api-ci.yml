@@ -1,0 +1,53 @@
+name: Check API AJDR
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  run_tests:
+    runs-on: ubuntu-latest
+    environment: test
+    steps:
+      # Récupérer le code du dépôt dans le runner (action officiel)
+      - name: checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install pnpm
+        run: corepack enable && corepack prepare pnpm@latest --activate
+
+      - name: Install dependencies
+        run: |
+          pnpm config set enable-pre-post-scripts true
+          pnpm approve-builds prisma @prisma/engines bcrypt
+          pnpm install --frozen-lockfile
+
+      # Prisma client pour environnement du runner
+      - name: Generate Prisma Client
+        run: pnpm db:generate
+        env:
+          DATABASE_URL: ${{ vars.DATABASE_URL }}
+
+      # Tests unitaires
+      - name: Run unit tests
+        run: pnpm test:unit
+        env:
+          JWT_SECRET: ${{ vars.JWT_SECRET }}
+
+      # Tests d'intégration
+      - name: Run integration tests
+        run: pnpm run ghact:test:spec
+        env:
+          HUSKY: 0
+          PORT: ${{ vars.PORT }}
+          ALLOWED_ORIGINS: ${{ vars.ALLOWED_ORIGINS }}
+          JWT_SECRET: ${{ vars.JWT_SECRET }}
+          NODE_ENV: test
+          DATABASE_URL: ${{ vars.DATABASE_URL }}
+          FRONT_URL: ${{ vars.FRONT_URL }}
